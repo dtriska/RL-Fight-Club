@@ -1,0 +1,2 @@
+[] When clicking on a piece highlight the legal moves (QOL)
+[] Change ML model to RL model. We can reuse the weights of the model to speed up the training process.

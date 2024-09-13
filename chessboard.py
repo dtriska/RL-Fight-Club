@@ -91,17 +91,7 @@ def ai_move(board):
     def calculate_move():
         nonlocal move
         move = minmax.minimax_root(board, 3, False)
-    
-    # def send_board_to_ec2():
-    #     nonlocal move
 
-    #     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    #         s.connect(("54.176.34.4", 8080))
-    #         s.sendall(board.fen().encode())
-            
-    #         move = s.recv(1024).decode()
-    #         print(move)
-    #         move = chess.Move.from_uci(move)
     move_calculation_thread = threading.Thread(target=calculate_move)
     move_calculation_thread.start()
         
@@ -117,7 +107,7 @@ def ai_move(board):
         board.push(move)
         print(move)
         
-    print("Time taken: ", time.time() - start)
+    # print("Time taken: ", time.time() - start)
     drawBoard()
     drawPieces(board)
     drawText()

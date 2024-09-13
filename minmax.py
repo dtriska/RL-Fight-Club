@@ -66,14 +66,7 @@ def minimax_root(board, depth, maximizing_player=True):
     best_move = None
     best_value = -9999 if maximizing_player else 9999
     
-    with ThreadPoolExecutor() as executor:
-        futures = []
-        for move in board.legal_moves:
-            new_board = chess.Board(board.fen())
-            new_board.push(move)
-            futures.append(executor.submit(minimax, new_board, depth - 1, -9999, 9999, not maximizing_player))
-    
-    results = [f.result() for f in futures]
+    results = []
     
     for move, value in zip(board.legal_moves, results):
         if maximizing_player:
@@ -84,8 +77,8 @@ def minimax_root(board, depth, maximizing_player=True):
             if value <= best_value:
                 best_value = value
                 best_move = move
-    print("Value: ", best_value)
-    print("FEN: ", board.fen())
+    # print("Value: ", best_value)
+    # print("FEN: ", board.fen())
     return best_move
 
 
