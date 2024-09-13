@@ -1,0 +1,7 @@
+
+ChessML/Dataset/
+.env
+ChessML/archive/data.csv
+*.v2
+/ChessML/lightning_logs/chessml
+*.ckpt
