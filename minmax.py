@@ -65,21 +65,26 @@ def minimax(board, depth, alpha, beta, maximizing_player):
 def minimax_root(board, depth, maximizing_player=True):
     best_move = None
     best_value = -9999 if maximizing_player else 9999
-    
-    results = []
-    
-    for move, value in zip(board.legal_moves, results):
+
+    legal_moves = list(board.legal_moves)
+    for move in legal_moves:
+        new_board = board.copy()
+        new_board.push(move)
+        value = minimax(new_board, depth - 1, -9999, 9999, not maximizing_player)
+        
         if maximizing_player:
-            if value >= best_value:
+            if value > best_value:
                 best_value = value
                 best_move = move
         else:
-            if value <= best_value:
+            if value < best_value:
                 best_value = value
                 best_move = move
-    # print("Value: ", best_value)
-    # print("FEN: ", board.fen())
+    
+    print("Best Value: ", best_value)
+    print("FEN: ", board.fen())
     return best_move
+
 
 
 

@@ -87,10 +87,9 @@ def drawPieces(board):
 def ai_move(board):
     global stop_threads
     move = None
-    start = time.time()
     def calculate_move():
         nonlocal move
-        move = minmax.minimax_root(board, 3, False)
+        move = minmax.minimax_root(board, 2, False)
 
     move_calculation_thread = threading.Thread(target=calculate_move)
     move_calculation_thread.start()
@@ -107,7 +106,6 @@ def ai_move(board):
         board.push(move)
         print(move)
         
-    # print("Time taken: ", time.time() - start)
     drawBoard()
     drawPieces(board)
     drawText()
@@ -189,7 +187,6 @@ def main():
             #     drawPieces(board)
                 
         else:
-            print("AI's turn")
             if (ai_move(board)):
                 running = False
                 return
