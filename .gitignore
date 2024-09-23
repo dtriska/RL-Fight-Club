@@ -5,7 +5,7 @@ ChessML/archive/data.csv
 *.v2
 /ChessML/lightning_logs/chessml
 *.ckpt
-
+venv/
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
