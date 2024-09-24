@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Goal
   - Wall
+  - blueAgent
+  - redAgent
   layers:
   - Default
   - TransparentFX
