@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1727138991",
+        "python_version": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\vinhp\\OneDrive\\Documents\\GitHub\\ChessML\\venv\\Scripts\\mlagents-learn",
+        "mlagents_version": "1.0.0",
+        "mlagents_envs_version": "1.0.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1727139003"
+    },
+    "total": 11.258655300014652,
+    "count": 1,
+    "self": 0.004811899969354272,
+    "children": {
+        "run_training.setup": {
+            "total": 0.06570759997703135,
+            "count": 1,
+            "self": 0.06570759997703135
+        },
+        "TrainerController.start_learning": {
+            "total": 11.188135800068267,
+            "count": 1,
+            "self": 0.0003877000417560339,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 11.187736699939705,
+                    "count": 1,
+                    "self": 11.187736699939705
+                },
+                "trainer_threads": {
+                    "total": 1.9000144675374031e-06,
+                    "count": 1,
+                    "self": 1.9000144675374031e-06
+                },
+                "TrainerController._save_models": {
+                    "total": 9.500072337687016e-06,
+                    "count": 1,
+                    "self": 9.500072337687016e-06
+                }
+            }
+        }
+    }
+}
