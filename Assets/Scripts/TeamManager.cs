@@ -5,8 +5,8 @@ using Unity.MLAgents;
 
 public class TeamManager : MonoBehaviour
 {
-    public List<ArenaAgent> hiders;
-    public List<ArenaAgent> seekers;
+    public List<ArenaAgent> teamBlue;
+    public List<ArenaAgent> teamRed;
 
 
     [Serializable]
@@ -28,10 +28,10 @@ public class TeamManager : MonoBehaviour
 
     public void CheckEndEpisode()
     {
-        bool allHidersEliminated = hiders.TrueForAll(h => h.isEliminated);
-        bool allSeekersEliminated = seekers.TrueForAll(s => s.isEliminated);
+        bool allBlueEliminated = teamBlue.TrueForAll(b => b.isEliminated);
+        bool allRedEliminated = teamRed.TrueForAll(r => r.isEliminated);
 
-        if (allHidersEliminated || allSeekersEliminated)
+        if (allBlueEliminated || allRedEliminated)
         {
             EndEpisode();
         }
@@ -39,39 +39,39 @@ public class TeamManager : MonoBehaviour
 
     public void EndEpisode()
     {
-        if (hiders.TrueForAll(h => h.isEliminated))
+        if (teamBlue.TrueForAll(b => b.isEliminated))
         {
-            // Seekers win
-            foreach (var seeker in seekers)
+            // Red win
+            foreach (var red in teamRed)
             {
-                seeker.Win();
+                red.Win();
             }
-            foreach (var hider in hiders)
+            foreach (var blue in teamBlue)
             {
-                hider.Lose();
+                blue.Lose();
             }
         }
-        else if (seekers.TrueForAll(s => s.isEliminated))
+        else if (teamRed.TrueForAll(r => r.isEliminated))
         {
-            // Hiders win
-            foreach (var hider in hiders)
+            // Blue win
+            foreach (var blue in teamBlue)
             {
-                hider.Win();
+                blue.Win();
             }
-            foreach (var seeker in seekers)
+            foreach (var red in teamRed)
             {
-                seeker.Lose();
+                red.Lose();
             }
-        }
-
-        foreach (var hider in hiders)
-        {
-            hider.EndEpisode();
         }
 
-        foreach (var seeker in seekers)
+        foreach (var blue in teamBlue)
         {
-            seeker.EndEpisode();
+            blue.EndEpisode();
+        }
+
+        foreach (var red in teamRed)
+        {
+            red.EndEpisode();
         }
     }
 

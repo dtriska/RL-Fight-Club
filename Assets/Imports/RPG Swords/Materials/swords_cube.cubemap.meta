@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 71f107bb542df6d4c8dd3fd89f346702
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 7056
+  packageName: RPG Swords!
+  packageVersion: 2
+  assetPath: Assets/RPG Swords/Materials/swords_cube.cubemap
+  uploadId: 27783

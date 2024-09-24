@@ -7,6 +7,10 @@ using Unity.MLAgents.Sensors;
 
 public class ArenaAgent : Agent
 {
+    [Header("TEAM")]
+
+    public int teamID;
+    private AgentCubeMovement m_CubeMovement;
     [SerializeField] private Material winMaterial;
     [SerializeField] private Material loseMaterial;
     [SerializeField] private MeshRenderer floorMeshRenderer;
@@ -86,4 +90,10 @@ public class ArenaAgent : Agent
         AddReward(-2.0f);
         floorMeshRenderer.material = loseMaterial;
     }
+
+    // private float[] GetOtherAgentData(TeamManager.PlayerInfo info)
+    // {
+    //     var otherAgentData = new float[6];
+    //     otherAgentData[0] = (float)info.Agent.HitPointsRemaining / (float)NumberOfTimesPlayerCanGetHit;
+    // }
 }
