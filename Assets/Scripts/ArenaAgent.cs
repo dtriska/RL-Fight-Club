@@ -5,27 +5,28 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 
-public class MoveToGoalAgent : Agent
+public class ArenaAgent : Agent
 {
-    [SerializeField] private Transform goal;
     [SerializeField] private Material winMaterial;
     [SerializeField] private Material loseMaterial;
     [SerializeField] private MeshRenderer floorMeshRenderer;
+    public TeamManager teamManager;
+
+    public bool isEliminated = false;
 
 
     public override void OnEpisodeBegin()
     {
+        isEliminated = false;
         transform.localPosition = new Vector3(Random.Range(-4f, 4f), 4f, Random.Range(-4f, 4f));
-        goal.localPosition = new Vector3(Random.Range(-4f, 4f), 4f, Random.Range(-4f, 4f));
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // Add observations for the agent
-        sensor.AddObservation(transform.localPosition); // Agent position
-        sensor.AddObservation(goal.localPosition); // Goal position
+        sensor.AddObservation(transform.localPosition);
 
     }
+
     public override void OnActionReceived(ActionBuffers actions)
     {
         float moveX = actions.ContinuousActions[0];
@@ -33,6 +34,12 @@ public class MoveToGoalAgent : Agent
         float moveSpeed = 3f;
 
         transform.localPosition += new Vector3(moveX, 0, moveZ) * Time.deltaTime * moveSpeed;
+
+        // Reward for staying alive
+        if (!isEliminated)
+        {
+            AddReward(0.01f);
+        }
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -44,17 +51,39 @@ public class MoveToGoalAgent : Agent
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Goal")
+        if (other.tag == "Opponent")
         {
-            SetReward(1f);
-            floorMeshRenderer.material = winMaterial;
-            EndEpisode();
+            // Reward for eliminating an opponent
+            AddReward(1.0f);
+            other.GetComponent<ArenaAgent>().Eliminate();
         }
-        else if (other.tag == "Wall")
+        else if (other.tag == "Teammate")
         {
-            SetReward(-1f);
+            // Punishment for hitting a teammate
+            AddReward(-0.5f);
+        }
+    }
+
+    public void Eliminate()
+    {
+        if (!isEliminated)
+        {
+            isEliminated = true;
+            AddReward(-1.0f);
             floorMeshRenderer.material = loseMaterial;
-            EndEpisode();
+            // teamManager.CheckEndEpisode();
         }
+    }
+
+    public void Win()
+    {
+        AddReward(2.0f);
+        floorMeshRenderer.material = winMaterial;
+    }
+
+    public void Lose()
+    {
+        AddReward(-2.0f);
+        floorMeshRenderer.material = loseMaterial;
     }
 }
