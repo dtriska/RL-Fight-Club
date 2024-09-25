@@ -1,0 +1,30 @@
+{
+    "Arena": {
+        "elo": 1199.5,
+        "checkpoints": [
+            {
+                "steps": 952,
+                "file_path": "results\\Arena_Test2\\Arena\\Arena-952.onnx",
+                "reward": 0.2666666756073634,
+                "creation_time": 1727245578.7636251,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test2\\Arena\\Arena-952.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 952,
+            "file_path": "results\\Arena_Test2\\Arena.onnx",
+            "reward": 0.2666666756073634,
+            "creation_time": 1727245578.7636251,
+            "auxillary_file_paths": [
+                "results\\Arena_Test2\\Arena\\Arena-952.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1727245399",
+        "python_version": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\vinhp\\OneDrive\\Documents\\GitHub\\ChessML\\venv\\Scripts\\mlagents-learn config/Arena.yaml --run-id=Arena_Test1",
+        "mlagents_version": "1.0.0",
+        "mlagents_envs_version": "1.0.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1727245424"
+    },
+    "total": 25.06025179999415,
+    "count": 1,
+    "self": 0.008838400011882186,
+    "children": {
+        "run_training.setup": {
+            "total": 0.08529039996210486,
+            "count": 1,
+            "self": 0.08529039996210486
+        },
+        "TrainerController.start_learning": {
+            "total": 24.96612300002016,
+            "count": 1,
+            "self": 0.0003326000878587365,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 24.96577959996648,
+                    "count": 1,
+                    "self": 24.96577959996648
+                },
+                "trainer_threads": {
+                    "total": 7.00005330145359e-07,
+                    "count": 1,
+                    "self": 7.00005330145359e-07
+                },
+                "TrainerController._save_models": {
+                    "total": 1.009996049106121e-05,
+                    "count": 1,
+                    "self": 1.009996049106121e-05
+                }
+            }
+        }
+    }
+}

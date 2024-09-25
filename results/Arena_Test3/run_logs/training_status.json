@@ -1,0 +1,93 @@
+{
+    "Arena": {
+        "checkpoints": [
+            {
+                "steps": 1999873,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-1999873.onnx",
+                "reward": 0.6000000213583311,
+                "creation_time": 1727250080.9436522,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-1999873.pt"
+                ]
+            },
+            {
+                "steps": 3999999,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-3999999.onnx",
+                "reward": 0.3282353039173519,
+                "creation_time": 1727254421.337894,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-3999999.pt"
+                ]
+            },
+            {
+                "steps": 5999719,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-5999719.onnx",
+                "reward": 0.3609195501468648,
+                "creation_time": 1727258978.9848664,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-5999719.pt"
+                ]
+            },
+            {
+                "steps": 7999975,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-7999975.onnx",
+                "reward": 0.3876543311793127,
+                "creation_time": 1727263674.6399634,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-7999975.pt"
+                ]
+            },
+            {
+                "steps": 9999984,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-9999984.onnx",
+                "reward": 0.38333333532015484,
+                "creation_time": 1727268496.2982068,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-9999984.pt"
+                ]
+            },
+            {
+                "steps": 11999995,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-11999995.onnx",
+                "reward": 0.35000000335276127,
+                "creation_time": 1727273241.7420537,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-11999995.pt"
+                ]
+            },
+            {
+                "steps": 13999991,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-13999991.onnx",
+                "reward": 0.35974026781010937,
+                "creation_time": 1727278013.0433614,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-13999991.pt"
+                ]
+            },
+            {
+                "steps": 15250277,
+                "file_path": "results\\Arena_Test3\\Arena\\Arena-15250277.onnx",
+                "reward": 0.34285715222358704,
+                "creation_time": 1727303085.7846634,
+                "auxillary_file_paths": [
+                    "results\\Arena_Test3\\Arena\\Arena-15250277.pt"
+                ]
+            }
+        ],
+        "elo": 2012.5629993560833,
+        "final_checkpoint": {
+            "steps": 15250277,
+            "file_path": "results\\Arena_Test3\\Arena.onnx",
+            "reward": 0.34285715222358704,
+            "creation_time": 1727303085.7846634,
+            "auxillary_file_paths": [
+                "results\\Arena_Test3\\Arena\\Arena-15250277.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}
