@@ -9,11 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6712373641689772799}
-  - component: {fileID: 2869470272230778115}
-  - component: {fileID: 8278960221906146450}
+  - component: {fileID: 9063463944137919715}
   m_Layer: 0
   m_Name: Pivot
-  m_TagString: Untagged
+  m_TagString: Sword
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,8 +32,8 @@ Transform:
   m_Children:
   - {fileID: 5364681528555340399}
   m_Father: {fileID: 4375734528722267440}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!111 &2869470272230778115
+  m_LocalEulerAnglesHint: {x: 0, y: -4.76, z: 0}
+--- !u!111 &9063463944137919715
 Animation:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,29 +42,14 @@ Animation:
   m_GameObject: {fileID: 2034100912604197256}
   m_Enabled: 1
   serializedVersion: 4
-  m_Animation: {fileID: 7400000, guid: 20c4af256e477f845a7cb7ded31a76d4, type: 2}
+  m_Animation: {fileID: 7400000, guid: 4ced7ac19f373b348b62c49085badd48, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: 20c4af256e477f845a7cb7ded31a76d4, type: 2}
+  - {fileID: 7400000, guid: 4ced7ac19f373b348b62c49085badd48, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
---- !u!114 &8278960221906146450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034100912604197256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e4037db567a98e4aa6b3e790e57d3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_damage: 10
-  m_knockback: 10
-  m_swordSwing: {fileID: 2869470272230778115}
 --- !u!1 &3273347584719131493
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,7 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 20
+    VectorObservationSize: 8
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 3
@@ -823,9 +807,8 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   teamID: 0
-  UseVectorObs: 0
-  sword: {fileID: 0}
-  input: {fileID: 0}
+  UseVectorObs: 1
+  input: {fileID: 5993337643080092620}
   AgentRb: {fileID: 0}
   NumberOfTimesPlayerCanBeHit: 5
   HitPointsRemaining: 0
@@ -833,7 +816,9 @@ MonoBehaviour:
   m_InputH: 0
   m_AttackInput: 0
   m_DashInput: 0
-  m_OtherAgentsBuffer: {fileID: 0}
+  m_OtherAgentsBuffer: {fileID: 4890969568182281415}
+  m_knockback: 10
+  m_swordSwing: {fileID: 9063463944137919715}
   disableInputCollectionInHeuristicCallback: 0
 --- !u!114 &5993337643080092620
 MonoBehaviour:
@@ -869,7 +854,6 @@ MonoBehaviour:
   runningForceMode: 2
   agentRunSpeed: 10
   agentTerminalVel: 20
-  agentRunInAirSpeed: 7
   dashBoostForce: 30
   dashForceMode: 2
   dashPressed: 0
@@ -879,52 +863,6 @@ MonoBehaviour:
   MouseSensitivity: 10
   MouseSmoothTime: 0.01
   agentFallingSpeed: 80
-  AnimateBodyMesh: 1
-  walkingBounceCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.0045123426
-      value: 0.0023760526
-      inSlope: 14.022675
-      outSlope: 14.022675
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.035056457
-      value: 0.4306862
-      inSlope: 3.4233692
-      outSlope: 3.4233692
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.12020921
-      value: -0.18036452
-      inSlope: 0.0793798
-      outSlope: 0.0793798
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.14553833
-      value: 0.00541687
-      inSlope: 7.334696
-      outSlope: 7.334696
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  walkingAnimScale: 1
-  bodyMesh: {fileID: 4375734528722267440}
-  groundCheck: {fileID: 0}
 --- !u!1 &7863243584193694639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,12 +1023,8 @@ PrefabInstance:
       objectReference: {fileID: 7400000, guid: 20c4af256e477f845a7cb7ded31a76d4, type: 2}
     - target: {fileID: -5716681864270162303, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}
       propertyPath: m_Animations.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -5716681864270162303, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}
-      propertyPath: 'm_Animations.Array.data[0]'
-      value: 
-      objectReference: {fileID: 7400000, guid: 20c4af256e477f845a7cb7ded31a76d4, type: 2}
     - target: {fileID: -4216859302048453862, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.61000013
@@ -1134,6 +1068,10 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}
       propertyPath: m_Name
       value: sword01
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}
+      propertyPath: m_TagString
+      value: Sword
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -5716681864270162303, guid: dd0682cd55d7f8342b8026ebb1cfc4a5, type: 3}

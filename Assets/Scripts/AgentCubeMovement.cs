@@ -15,8 +15,6 @@ namespace MLAgents
         [Header("RUNNING")] public ForceMode runningForceMode = ForceMode.Impulse;
         public float agentRunSpeed = 10;
         public float agentTerminalVel = 20;
-        //speed agent can run if not grounded
-        public float agentRunInAirSpeed = 7f;
 
         [Header("DASH")]
         public float dashBoostForce = 20f;
@@ -33,8 +31,6 @@ namespace MLAgents
         //1 means no drag will be applied
         public float agentIdleDragVelCoeff = .9f;
 
-        public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 };
-
         [Header("BODY ROTATION")]
         public float MouseSensitivity = 1;
         public float MouseSmoothTime = 0.05f;
@@ -47,14 +43,7 @@ namespace MLAgents
         //force applied to agent while falling
         public float agentFallingSpeed = 50f;
 
-        [Header("ANIMATE MESH")] public bool AnimateBodyMesh;
-        public AnimationCurve walkingBounceCurve;
-        public float walkingAnimScale = 1;
-        public Transform bodyMesh;
-        private float m_animateBodyMeshCurveTimer;
-
         private Rigidbody rb;
-        public AgentCubeGroundCheck groundCheck;
         private float inputH;
         private float inputV;
         ArenaAgentInput m_Input;
@@ -63,12 +52,10 @@ namespace MLAgents
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            groundCheck = GetComponent<AgentCubeGroundCheck>();
             m_Agent = GetComponent<ArenaAgent>();
             rb.maxAngularVelocity = maxAngularVel;
             originalRotation = transform.localRotation;
-            var envParameters = Academy.Instance.EnvironmentParameters;
-            // m_Input = GetComponent<ArenaAgentInput>();
+            m_Input = GetComponent<ArenaAgentInput>();
         }
 
         public static float ClampAngle(float angle, float min, float max)
@@ -92,10 +79,6 @@ namespace MLAgents
         {
             dashCoolDownTimer += Time.fixedDeltaTime;
 
-            if (groundCheck && !groundCheck.isGrounded)
-            {
-                AddFallingForce(rb);
-            }
 
             if (m_Agent)
             {
@@ -138,61 +121,14 @@ namespace MLAgents
             }
         }
 
-        public void RotateTowards(Vector3 dir, float maxRotationRate = 1)
-        {
-            if (dir != Vector3.zero)
-            {
-                var rot = Quaternion.LookRotation(dir);
-                var smoothedRot = Quaternion.RotateTowards(rb.rotation, rot, maxRotationRate * Time.deltaTime);
-                rb.MoveRotation(smoothedRot);
-            }
-        }
-
         public void RunOnGround(Vector3 dir)
         {
-
             //ADD FORCE
             var vel = rb.velocity.magnitude;
             float adjustedSpeed = Mathf.Clamp(agentRunSpeed - vel, 0, agentTerminalVel);
             rb.AddForce(dir * adjustedSpeed, runningForceMode);
 
-            //ANIMATE MESH
-            if (dir == Vector3.zero)
-            {
-                if (AnimateBodyMesh)
-                {
-                    bodyMesh.localPosition = Vector3.zero;
-                }
-            }
-            else
-            {
-                if (AnimateBodyMesh)
-                {
-                    bodyMesh.localPosition = Vector3.zero +
-                                             Vector3.up * walkingAnimScale * walkingBounceCurve.Evaluate(
-                                                 m_animateBodyMeshCurveTimer);
-                    m_animateBodyMeshCurveTimer += Time.fixedDeltaTime;
-                }
-            }
         }
 
-        public void RunInAir(Rigidbody rb, Vector3 dir)
-        {
-            var vel = rb.velocity.magnitude;
-            float adjustedSpeed = Mathf.Clamp(agentRunInAirSpeed - vel, 0, agentTerminalVel);
-            rb.AddForce(dir.normalized * adjustedSpeed,
-                runningForceMode);
-        }
-
-        public void AddIdleDrag(Rigidbody rb)
-        {
-            rb.velocity *= agentIdleDragVelCoeff;
-        }
-
-        public void AddFallingForce(Rigidbody rb)
-        {
-            rb.AddForce(
-                Vector3.down * agentFallingSpeed, ForceMode.Acceleration);
-        }
     }
 }

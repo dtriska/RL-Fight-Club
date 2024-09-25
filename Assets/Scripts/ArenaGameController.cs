@@ -16,8 +16,8 @@ public class AreaGameController : MonoBehaviour
     [Header("HUMAN PLAYER")] public GameObject PlayerGameObject;
     public int PlayerMaxHitPoints = 5;
     public float EliminationHitBonus = 0.1f;
-    private int m_NumberOfBluePlayersRemaining = 4;
-    private int m_NumberOfRedPlayersRemaining = 4;
+    private int m_NumberOfBluePlayersRemaining = 3;
+    private int m_NumberOfRedPlayersRemaining = 3;
     private SimpleMultiAgentGroup m_Team0AgentGroup;
     private SimpleMultiAgentGroup m_Team1AgentGroup;
     // public List<ArenaAgent> teamBlue;
@@ -104,8 +104,6 @@ public class AreaGameController : MonoBehaviour
         var ThrowAgentGroup = hitTeamID == 1 ? m_Team0AgentGroup : m_Team1AgentGroup;
         float hitBonus = EliminationHitBonus;
 
-
-
         if (hit.HitPointsRemaining == 1) //FINAL HIT
         {
             m_NumberOfBluePlayersRemaining -= hitTeamID == 0 ? 1 : 0;
@@ -118,7 +116,10 @@ public class AreaGameController : MonoBehaviour
                 ThrowAgentGroup.EndGroupEpisode();
                 HitAgentGroup.EndGroupEpisode();
                 print($"Team {throwTeamID} Won");
+                hit.gameObject.SetActive(false);
                 ResetScene();
+            } else { // The current agent was just killed but there are still agents left
+                hit.gameObject.SetActive(false);
             }
         }
         else
@@ -141,8 +142,8 @@ public class AreaGameController : MonoBehaviour
     {
         StopAllCoroutines();
 
-        m_NumberOfBluePlayersRemaining = 4;
-        m_NumberOfRedPlayersRemaining = 4;
+        m_NumberOfBluePlayersRemaining = 3;
+        m_NumberOfRedPlayersRemaining = 3;
 
         m_ResetTimer = 0;
 

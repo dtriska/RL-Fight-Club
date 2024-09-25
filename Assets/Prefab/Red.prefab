@@ -9,8 +9,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1067266767069333028, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
-      propertyPath: m_BehaviorType
+      propertyPath: TeamId
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1067266767069333028, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2622549859699702754, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -21,9 +25,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9215229846075341208}
     - target: {fileID: 2736476669929253109, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
-      propertyPath: sword
-      value: 
-      objectReference: {fileID: 6785596532158621382}
+      propertyPath: teamID
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2736476669929253109, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
       propertyPath: UseVectorObs
       value: 1
@@ -89,17 +93,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
---- !u!114 &6785596532158621382 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8278960221906146450, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
-  m_PrefabInstance: {fileID: 3228956058397569620}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e4037db567a98e4aa6b3e790e57d3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8011825146956469907 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4890969568182281415, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}

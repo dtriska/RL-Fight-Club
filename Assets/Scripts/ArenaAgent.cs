@@ -18,7 +18,6 @@ public class ArenaAgent : Agent
     private AreaGameController m_GameController;
     private Vector3 m_StartingPos;
     private Quaternion m_StartingRot;
-    [SerializeField] private Sword sword;
     [Header("INPUT")]
     public ArenaAgentInput input;
 
@@ -40,6 +39,10 @@ public class ArenaAgent : Agent
     private bool m_DashCoolDownReady;
     private float m_LocationNormalizationFactor = 80.0f; // About the size of a reasonable stage
     public BufferSensorComponent m_OtherAgentsBuffer;
+
+    [Header("SWORD")]
+    public float m_knockback = 10f;
+    [SerializeField] private Animation m_swordSwing;
 
     private bool m_IsDecisionStep;
     [HideInInspector]
@@ -129,7 +132,7 @@ public class ArenaAgent : Agent
                 m_OtherAgentsBuffer.AppendObservation(GetOtherAgentData(info));
             }
         }
-        
+
         int numOpponents = 0;
         foreach (var info in opponentsList)
         {
@@ -181,7 +184,7 @@ public class ArenaAgent : Agent
             //HANDLE THROWING
             if (m_AttackInput > 0)
             {
-                sword.Attack();
+                Attack();
             }
             //HANDLE DASH MOVEMENT
             if (m_DashInput > 0 && m_DashCoolDownReady)
@@ -196,16 +199,37 @@ public class ArenaAgent : Agent
         MoveAgent(actionBuffers);
     }
 
-
-    private void OnTriggerEnter(Collider col)
+    private void OnTriggerEnter(Collider other)
     {
-        ArenaAgent fromSword = col.gameObject.GetComponent<ArenaAgent>();
-        m_GameController.PlayerWasHit(this, fromSword);
+
+        if (!other.CompareTag("Sword"))
+        {
+            return;
+        }
+        else
+        {
+            // Make sure the sword is not its own team's sword
+            var swordParentAgent = other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>().teamID;
+
+            if (swordParentAgent == teamID)
+            {
+                return;
+            }
+            print("Player: " + teamID + " was hit by Player: " + swordParentAgent);
+
+            var dir = transform.position - other.transform.position;
+            dir.y = 0;
+            dir.Normalize();
+            AgentRb.AddForce(dir * m_knockback, ForceMode.Impulse);
+            m_GameController.PlayerWasHit(this, other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>());
+        }
     }
 
     public void Attack()
     {
-        sword.Attack();
+        m_swordSwing.Play();
+        // Reset the sword swing animation
+        m_swordSwing.Rewind();
     }
 
     // HUMAN INPUT
