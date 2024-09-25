@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
@@ -117,8 +118,11 @@ public class AreaGameController : MonoBehaviour
                 HitAgentGroup.EndGroupEpisode();
                 print($"Team {throwTeamID} Won");
                 hit.gameObject.SetActive(false);
-                ResetScene();
-            } else { // The current agent was just killed but there are still agents left
+
+                StartCoroutine(WaitAndResetScene());
+            }
+            else
+            { // The current agent was just killed but there are still agents left
                 hit.gameObject.SetActive(false);
             }
         }
@@ -129,6 +133,15 @@ public class AreaGameController : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitAndResetScene()
+    {
+        // Wait for the specified duration
+        float delayBeforeReset = 3f;
+        yield return new WaitForSeconds(delayBeforeReset);
+
+        // Reset the scene
+        ResetScene();
+    }
 
     private void GetAllParameters()
     {
