@@ -8,6 +8,9 @@ TagManager:
   - Wall
   - blueAgent
   - redAgent
+  - Sword
+  - blueAgentFront
+  - redAgentFront
   layers:
   - Default
   - TransparentFX

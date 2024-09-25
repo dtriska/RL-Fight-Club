@@ -97,11 +97,11 @@ namespace MLAgents
                 AddFallingForce(rb);
             }
 
-            // if (m_Agent)
-            // {
-            //     //this disables the heuristic input collection
-            //     m_Agent.disableInputCollectionInHeuristicCallback = allowHumanInputAndDisableAgentHeuristicInput;
-            // }
+            if (m_Agent)
+            {
+                //this disables the heuristic input collection
+                m_Agent.disableInputCollectionInHeuristicCallback = allowHumanInputAndDisableAgentHeuristicInput;
+            }
             if (!allowHumanInputAndDisableAgentHeuristicInput)
             {
                 return;
@@ -124,7 +124,7 @@ namespace MLAgents
             }
             if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_attackPressed))
             {
-                // m_Agent.Attack();
+                m_Agent.Attack();
             }
         }
 

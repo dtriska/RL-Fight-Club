@@ -35,5 +35,5 @@ behaviors:
       initial_elo: 1200.0
 
 # Enable when training from a build or in the cloud.
-# env_settings:
-#   num_envs: 3
+env_settings:
+  num_envs: 3
