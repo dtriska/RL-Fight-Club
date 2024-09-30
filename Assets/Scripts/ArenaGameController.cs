@@ -16,8 +16,10 @@ public class AreaGameController : MonoBehaviour
 
     [Header("HUMAN PLAYER")] public GameObject PlayerGameObject;
     public float EliminationHitBonus = 0.1f;
-    private int m_NumberOfBluePlayersRemaining = 6;
-    private int m_NumberOfRedPlayersRemaining = 6;
+
+    // Change this if you're increasing or decreasing the number of players
+    private int m_NumberOfBluePlayersRemaining = 3;
+    private int m_NumberOfRedPlayersRemaining = 3;
     private SimpleMultiAgentGroup m_Team0AgentGroup;
     private SimpleMultiAgentGroup m_Team1AgentGroup;
     public bool ShouldPlayEffects = true;
@@ -186,8 +188,8 @@ public class AreaGameController : MonoBehaviour
     {
         StopAllCoroutines();
 
-        m_NumberOfBluePlayersRemaining = 6;
-        m_NumberOfRedPlayersRemaining = 6;
+        m_NumberOfBluePlayersRemaining = 3;
+        m_NumberOfRedPlayersRemaining = 3;
 
         m_ResetTimer = 0;
 

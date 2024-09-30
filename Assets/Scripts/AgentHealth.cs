@@ -114,6 +114,7 @@ public class AgentHealth : MonoBehaviour
         CurrentPercentage = 100;
         rb.isKinematic = false;
         Dead = false;
+        IsOnFinalHit = false;
         CubeBody.SetActive(true);
         DeathCube.SetActive(false);
         ExplosionParticles.SetActive(false);
