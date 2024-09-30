@@ -29,11 +29,11 @@ public class ArenaAgent : Agent
     [HideInInspector]
     public BehaviorParameters m_BehaviorParameters;
     [Header("OTHER")]
-    public float m_InputH;
+    private float m_InputH;
     private float m_InputV;
     private float m_Rotate;
-    public float m_AttackInput;
-    public float m_DashInput;
+    private float m_AttackInput;
+    private float m_DashInput;
     private bool m_FirstInitialize = true;
     private bool m_DashCoolDownReady;
     private float m_LocationNormalizationFactor = 80.0f; // About the size of a reasonable stage

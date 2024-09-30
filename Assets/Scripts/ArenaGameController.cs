@@ -112,6 +112,7 @@ public class AreaGameController : MonoBehaviour
                 ThrowAgentGroup.EndGroupEpisode();
                 HitAgentGroup.EndGroupEpisode();
                 print($"Team {throwTeamID} Won");
+
                 if (ShouldPlayEffects)
                 {
                     // Don't poof the last agent
@@ -132,10 +133,7 @@ public class AreaGameController : MonoBehaviour
                 }
                 else
                 {
-                    if (CurrentSceneType == SceneType.Training)
-                    {
-                        hit.gameObject.SetActive(false);
-                    }
+                    hit.gameObject.SetActive(false);
                 }
             }
         }
@@ -158,6 +156,8 @@ public class AreaGameController : MonoBehaviour
     public IEnumerator TumbleThenPoof(ArenaAgent agent, bool shouldPoof = true)
     {
         WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        // Add force to make the agent tumble
+        agent.AgentRb.AddForce(Vector3.right * 2f, ForceMode.Impulse);
         agent.AgentRb.constraints = RigidbodyConstraints.None;
         agent.AgentRb.drag = .5f;
         agent.AgentRb.angularDrag = 0;

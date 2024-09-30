@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class AgentHealth : MonoBehaviour
 {
-    public int teamID;
+    private int teamID;
     public float m_knockback = 10f;
     public bool IsOnFinalHit = false;
     public AreaGameController m_GameController;
@@ -43,6 +43,7 @@ public class AgentHealth : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         m_GameController = GetComponentInParent<AreaGameController>();
+        teamID = GetComponentInParent<ArenaAgent>().teamID;
     }
 
     void Update()
@@ -95,19 +96,11 @@ public class AgentHealth : MonoBehaviour
             {
                 Dead = true;
                 rb.isKinematic = true;
-                if (m_GameController.CurrentSceneType == AreaGameController.SceneType.Training) // If training mode
-                {
-                    gameObject.SetActive(false);
-                }
-                else
-                {
-                    CubeBody.SetActive(false);
-                    DeathCube.transform.position = CubeBody.transform.position;
-                    DeathCube.SetActive(true);
-                    ExplosionParticles.transform.position = CubeBody.transform.position;
-                    ExplosionParticles.SetActive(true);
-                    StartCoroutine(DeactivateAfterDelay(1f));
-                }
+                CubeBody.SetActive(false);
+                DeathCube.transform.position = CubeBody.transform.position;
+                DeathCube.SetActive(true);
+                ExplosionParticles.transform.position = CubeBody.transform.position;
+                ExplosionParticles.SetActive(true);
             }
 
             if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game && m_GameController.ShouldPlayEffects)
@@ -124,11 +117,6 @@ public class AgentHealth : MonoBehaviour
         CubeBody.SetActive(true);
         DeathCube.SetActive(false);
         ExplosionParticles.SetActive(false);
-    }
-    private IEnumerator DeactivateAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        gameObject.SetActive(false);
     }
 
     private IEnumerator BodyDamageFlash()

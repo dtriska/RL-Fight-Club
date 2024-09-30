@@ -29,6 +29,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2736476669929253109, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: AgentHealth
+      value: 
+      objectReference: {fileID: 6789569401857784487}
+    - target: {fileID: 2736476669929253109, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
       propertyPath: UseVectorObs
       value: 1
       objectReference: {fileID: 0}
@@ -89,6 +93,10 @@ PrefabInstance:
       value: redAgent
       objectReference: {fileID: 0}
     - target: {fileID: 8284066986866624755, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: teamID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8284066986866624755, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
       propertyPath: startingColor.b
       value: 0.08627451
       objectReference: {fileID: 0}
@@ -105,6 +113,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+--- !u!114 &6789569401857784487 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8284066986866624755, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+  m_PrefabInstance: {fileID: 3228956058397569620}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 059763fbd1c6ecb40842d30c096cc3e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8011825146956469907 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4890969568182281415, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}

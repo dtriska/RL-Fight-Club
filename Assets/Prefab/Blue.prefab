@@ -6162,7 +6162,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   teamID: 0
-  AgentHealth: {fileID: 0}
+  AgentHealth: {fileID: 8284066986866624755}
   UseVectorObs: 1
   input: {fileID: 5993337643080092620}
   AgentRb: {fileID: 0}
@@ -6229,6 +6229,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059763fbd1c6ecb40842d30c096cc3e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamID: 0
+  m_knockback: 10
+  IsOnFinalHit: 0
+  m_GameController: {fileID: 0}
   CurrentPercentage: 100
   UISlider: {fileID: 0}
   bodyMesh: {fileID: 2622549859699702754}
