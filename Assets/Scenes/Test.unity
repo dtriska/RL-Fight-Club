@@ -218,7 +218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &107951223
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -503,7 +503,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4375734528722267440, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1210017212}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
 --- !u!114 &354494228 stripped
@@ -1109,13 +1112,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210017209}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.19517589, y: -0, z: -0, w: 0.98076826}
+  m_LocalPosition: {x: 0, y: 3.009, z: -2.8804636}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 354494229}
+  m_LocalEulerAnglesHint: {x: 22.51, y: 0, z: 0}
 --- !u!1001 &1423481748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1495,7 +1498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1690472354
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1701,7 +1704,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1210017212}
   - {fileID: 1199364438}
   - {fileID: 1502697334}
   - {fileID: 1690472357}

@@ -15,15 +15,12 @@ public class AreaGameController : MonoBehaviour
     public SceneType CurrentSceneType = SceneType.Training;
 
     [Header("HUMAN PLAYER")] public GameObject PlayerGameObject;
-    public int PlayerMaxHitPoints = 5;
     public float EliminationHitBonus = 0.1f;
     private int m_NumberOfBluePlayersRemaining = 6;
     private int m_NumberOfRedPlayersRemaining = 6;
     private SimpleMultiAgentGroup m_Team0AgentGroup;
     private SimpleMultiAgentGroup m_Team1AgentGroup;
-    // public List<ArenaAgent> teamBlue;
-    // public List<ArenaAgent> teamRed;
-
+    public bool ShouldPlayEffects = true;
     [Serializable]
     public class PlayerInfo
     {
@@ -62,19 +59,17 @@ public class AreaGameController : MonoBehaviour
         foreach (var item in Team0Players)
         {
             item.Agent.Initialize();
-            item.Agent.HitPointsRemaining = PlayerMaxHitPoints;
+            item.Agent.AgentHealth.CurrentPercentage = 100;
             item.Agent.m_BehaviorParameters.TeamId = 0;
             item.TeamID = 0;
-            item.Agent.NumberOfTimesPlayerCanBeHit = PlayerMaxHitPoints;
             m_Team0AgentGroup.RegisterAgent(item.Agent);
         }
         foreach (var item in Team1Players)
         {
             item.Agent.Initialize();
-            item.Agent.HitPointsRemaining = PlayerMaxHitPoints;
+            item.Agent.AgentHealth.CurrentPercentage = 100;
             item.Agent.m_BehaviorParameters.TeamId = 1;
             item.TeamID = 1;
-            item.Agent.NumberOfTimesPlayerCanBeHit = PlayerMaxHitPoints;
             m_Team1AgentGroup.RegisterAgent(item.Agent);
         }
 
@@ -105,7 +100,7 @@ public class AreaGameController : MonoBehaviour
         var ThrowAgentGroup = hitTeamID == 1 ? m_Team0AgentGroup : m_Team1AgentGroup;
         float hitBonus = EliminationHitBonus;
 
-        if (hit.HitPointsRemaining == 1) //FINAL HIT
+        if (hit.AgentHealth.IsOnFinalHit) //FINAL HIT
         {
             m_NumberOfBluePlayersRemaining -= hitTeamID == 0 ? 1 : 0;
             m_NumberOfRedPlayersRemaining -= hitTeamID == 1 ? 1 : 0;
@@ -117,18 +112,35 @@ public class AreaGameController : MonoBehaviour
                 ThrowAgentGroup.EndGroupEpisode();
                 HitAgentGroup.EndGroupEpisode();
                 print($"Team {throwTeamID} Won");
-                hit.gameObject.SetActive(false);
-
-                StartCoroutine(WaitAndResetScene());
+                if (ShouldPlayEffects)
+                {
+                    // Don't poof the last agent
+                    StartCoroutine(TumbleThenPoof(hit, false));
+                    StartCoroutine(WaitAndResetScene());
+                }
+                else
+                {
+                    ResetScene();
+                }
             }
             else
-            { // The current agent was just killed but there are still agents left
-                hit.gameObject.SetActive(false);
+            {
+                // Additional effects for game mode
+                if (ShouldPlayEffects)
+                {
+                    StartCoroutine(TumbleThenPoof(hit));
+                }
+                else
+                {
+                    if (CurrentSceneType == SceneType.Training)
+                    {
+                        hit.gameObject.SetActive(false);
+                    }
+                }
             }
         }
         else
         {
-            hit.HitPointsRemaining--;
             thrower.AddReward(hitBonus);
         }
     }
@@ -142,6 +154,25 @@ public class AreaGameController : MonoBehaviour
         // Reset the scene
         ResetScene();
     }
+
+    public IEnumerator TumbleThenPoof(ArenaAgent agent, bool shouldPoof = true)
+    {
+        WaitForFixedUpdate wait = new WaitForFixedUpdate();
+        agent.AgentRb.constraints = RigidbodyConstraints.None;
+        agent.AgentRb.drag = .5f;
+        agent.AgentRb.angularDrag = 0;
+        yield return new WaitForSeconds(2f);
+        if (shouldPoof)
+        {
+            agent.gameObject.SetActive(false);
+            //Poof Particles
+            // if (usePoofParticlesOnElimination)
+            // {
+            //     PlayParticleAtPosition(agent.transform.position);
+            // }
+        }
+    }
+
 
     private void GetAllParameters()
     {
@@ -165,14 +196,12 @@ public class AreaGameController : MonoBehaviour
         //Reset the agents
         foreach (var item in Team0Players)
         {
-            item.Agent.HitPointsRemaining = PlayerMaxHitPoints;
             item.Agent.gameObject.SetActive(true);
             item.Agent.ResetAgent();
             m_Team0AgentGroup.RegisterAgent(item.Agent);
         }
         foreach (var item in Team1Players)
         {
-            item.Agent.HitPointsRemaining = PlayerMaxHitPoints;
             item.Agent.gameObject.SetActive(true);
             item.Agent.ResetAgent();
             m_Team1AgentGroup.RegisterAgent(item.Agent);

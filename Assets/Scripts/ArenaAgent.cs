@@ -14,6 +14,8 @@ public class ArenaAgent : Agent
 
     public int teamID;
     private AgentCubeMovement m_CubeMovement;
+    [Header("HEALTH")] public AgentHealth AgentHealth;
+
     public bool UseVectorObs;
     private AreaGameController m_GameController;
     private Vector3 m_StartingPos;
@@ -23,10 +25,7 @@ public class ArenaAgent : Agent
 
     [HideInInspector]
     public Rigidbody AgentRb;
-    [HideInInspector]
-    public int NumberOfTimesPlayerCanBeHit = 5;
-    [HideInInspector]
-    public int HitPointsRemaining;
+
     [HideInInspector]
     public BehaviorParameters m_BehaviorParameters;
     [Header("OTHER")]
@@ -64,6 +63,7 @@ public class ArenaAgent : Agent
         AgentRb = GetComponent<Rigidbody>();
         input = GetComponent<ArenaAgentInput>();
         m_GameController = GetComponentInParent<AreaGameController>();
+        AgentHealth = GetComponent<AgentHealth>();
 
         if (m_FirstInitialize)
         {
@@ -79,7 +79,7 @@ public class ArenaAgent : Agent
         AgentRb.constraints = RigidbodyConstraints.FreezeRotation;
 
         transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
-
+        AgentHealth.ResetHealth();
         AgentRb.velocity = Vector3.zero;
         AgentRb.angularVelocity = Vector3.zero;
         AgentRb.drag = 4;
@@ -103,7 +103,7 @@ public class ArenaAgent : Agent
 
         if (UseVectorObs)
         {
-            sensor.AddObservation((float)HitPointsRemaining / (float)NumberOfTimesPlayerCanBeHit);
+            sensor.AddObservation(AgentHealth.CurrentPercentage / 100f); // Percentage of health remaining
 
             sensor.AddObservation(Vector3.Dot(AgentRb.velocity, AgentRb.transform.forward));
             sensor.AddObservation(Vector3.Dot(AgentRb.velocity, AgentRb.transform.right));
@@ -148,7 +148,7 @@ public class ArenaAgent : Agent
     private float[] GetOtherAgentData(AreaGameController.PlayerInfo info)
     {
         var otherAgentdata = new float[6];
-        otherAgentdata[0] = (float)info.Agent.HitPointsRemaining / (float)NumberOfTimesPlayerCanBeHit;
+        otherAgentdata[0] = info.Agent.AgentHealth.CurrentPercentage / 100f;
         var relativePosition = transform.InverseTransformPoint(info.Agent.transform.position);
         otherAgentdata[1] = relativePosition.x / m_LocationNormalizationFactor;
         otherAgentdata[2] = relativePosition.z / m_LocationNormalizationFactor;
@@ -181,7 +181,7 @@ public class ArenaAgent : Agent
         if (m_IsDecisionStep)
         {
             m_IsDecisionStep = false;
-            //HANDLE THROWING
+            //HANDLE ATTACKING
             if (m_AttackInput > 0)
             {
                 Attack();
@@ -197,32 +197,6 @@ public class ArenaAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         MoveAgent(actionBuffers);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-        if (!other.CompareTag("Sword"))
-        {
-            return;
-        }
-        else
-        {
-            // Make sure the sword is not its own team's sword
-            var swordParentAgent = other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>().teamID;
-
-            if (swordParentAgent == teamID)
-            {
-                return;
-            }
-            print("Player: " + teamID + " was hit by Player: " + swordParentAgent);
-
-            var dir = transform.position - other.transform.position;
-            dir.y = 0;
-            dir.Normalize();
-            AgentRb.AddForce(dir * m_knockback, ForceMode.Impulse);
-            m_GameController.PlayerWasHit(this, other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>());
-        }
     }
 
     public void Attack()
@@ -244,7 +218,7 @@ public class ArenaAgent : Agent
         contActionsOut[1] = input.moveInput.x;
         contActionsOut[2] = input.rotateInput * 3; //rotate
         var discreteActionsOut = actionsOut.DiscreteActions;
-        discreteActionsOut[0] = input.CheckIfInputSinceLastFrame(ref input.m_attackPressed) ? 1 : 0; //dash
+        discreteActionsOut[0] = input.CheckIfInputSinceLastFrame(ref input.m_attackPressed) ? 1 : 0; //attack
         discreteActionsOut[1] = input.CheckIfInputSinceLastFrame(ref input.m_dashPressed) ? 1 : 0; //dash
     }
 }
