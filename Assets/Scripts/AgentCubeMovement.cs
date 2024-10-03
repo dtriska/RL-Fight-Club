@@ -19,7 +19,6 @@ namespace MLAgents
         [Header("DASH")]
         public float dashBoostForce = 20f;
         public ForceMode dashForceMode = ForceMode.Impulse;
-        public bool dashPressed;
         public float dashCoolDownDuration = .2f;
         public float dashCoolDownTimer;
 

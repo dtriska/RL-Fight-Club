@@ -201,9 +201,10 @@ public class ArenaAgent : Agent
 
     public void Attack()
     {
-        m_swordSwing.Play();
-        // Reset the sword swing animation
-        m_swordSwing.Rewind();
+        if (!m_swordSwing.isPlaying) // Play only if not already playing
+        {
+            m_swordSwing.Play();
+        }
     }
 
     // HUMAN INPUT

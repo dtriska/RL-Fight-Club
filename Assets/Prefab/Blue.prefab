@@ -511,7 +511,7 @@ Transform:
   m_GameObject: {fileID: 5490977579547819785}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.15}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6167,9 +6167,6 @@ MonoBehaviour:
   input: {fileID: 5993337643080092620}
   AgentRb: {fileID: 0}
   m_BehaviorParameters: {fileID: 0}
-  m_InputH: 0
-  m_AttackInput: 0
-  m_DashInput: 0
   m_OtherAgentsBuffer: {fileID: 4890969568182281415}
   m_knockback: 10
   m_swordSwing: {fileID: 9063463944137919715}
@@ -6229,7 +6226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059763fbd1c6ecb40842d30c096cc3e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamID: 0
   m_knockback: 10
   IsOnFinalHit: 0
   m_GameController: {fileID: 0}
