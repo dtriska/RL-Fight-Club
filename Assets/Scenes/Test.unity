@@ -497,10 +497,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6712373641689772799, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 1.5599995
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712373641689772799, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -18.720001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712373641689772799, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 79.08
+      objectReference: {fileID: 0}
     - target: {fileID: 7316588331902677829, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
       propertyPath: m_Name
       value: Blue
       objectReference: {fileID: 0}
+<<<<<<< Updated upstream
+=======
+    - target: {fileID: 7316588331902677829, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9063463944137919715, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9063463944137919715, guid: 4d314ac4e4dcdf34793a9d3524611d96, type: 3}
+      propertyPath: 'm_Animations.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7400000, guid: a4259b1035d233a459f3a30e3bda4ffc, type: 2}
+>>>>>>> Stashed changes
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
