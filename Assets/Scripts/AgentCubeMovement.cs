@@ -43,6 +43,7 @@ namespace MLAgents
         public float agentFallingSpeed = 50f;
 
         private Rigidbody rb;
+        private Animator anim;
         private float inputH;
         private float inputV;
         ArenaAgentInput m_Input;
@@ -55,6 +56,7 @@ namespace MLAgents
             rb.maxAngularVelocity = maxAngularVel;
             originalRotation = transform.localRotation;
             m_Input = GetComponent<ArenaAgentInput>();
+            anim = GetComponent<Animator>();
         }
 
         public static float ClampAngle(float angle, float min, float max)
@@ -106,7 +108,7 @@ namespace MLAgents
             }
             if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_attackPressed))
             {
-                m_Agent.Attack();
+                Attack();
             }
         }
 
@@ -126,8 +128,23 @@ namespace MLAgents
             var vel = rb.velocity.magnitude;
             float adjustedSpeed = Mathf.Clamp(agentRunSpeed - vel, 0, agentTerminalVel);
             rb.AddForce(dir * adjustedSpeed, runningForceMode);
+            anim.SetFloat("Horizontal", dir.x);
+            anim.SetFloat("Vertical", dir.y);
+        }
+
+        public void Attack()
+        {
+            if (!IsAnimationPlaying("LightAttack"))
+            {
+                anim.SetTrigger("Light");
+            }
 
         }
 
+
+        private bool IsAnimationPlaying(string animName)
+        {
+            return anim.GetCurrentAnimatorStateInfo(0).IsName(animName);
+        }
     }
 }

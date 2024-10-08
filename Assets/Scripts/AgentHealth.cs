@@ -14,18 +14,17 @@ public class AgentHealth : MonoBehaviour
     public float CurrentPercentage = 100;
     public Slider UISlider;
 
-    public MeshRenderer bodyMesh;
     public Color damageColor;
     public Color startingColor;
     public float damageFlashDuration = .02f;
 
     public GameObject CubeBody;
-    public GameObject DeathCube;
     public GameObject ExplosionParticles;
     public bool Dead;
     public float DamagePerHit = 15f;
 
     private Rigidbody rb;
+    private static Dictionary<Collider, ArenaAgent> swordParentTeamIDCache = new Dictionary<Collider, ArenaAgent>();
 
     void OnEnable()
     {
@@ -34,11 +33,6 @@ public class AgentHealth : MonoBehaviour
         if (UISlider)
         {
             UISlider.value = CurrentPercentage;
-        }
-
-        if (bodyMesh)
-        {
-            startingColor = bodyMesh.sharedMaterial.color;
         }
 
         rb = GetComponent<Rigidbody>();
@@ -73,19 +67,25 @@ public class AgentHealth : MonoBehaviour
         }
         else
         {
-            var swordParentAgent = other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>().teamID;
+            ArenaAgent swordParentAgent;
+            if (!swordParentTeamIDCache.TryGetValue(other, out swordParentAgent))
+            {
+                Transform parentAgent = GetAncestorAtLevel(other.transform, 9);
+                swordParentAgent = parentAgent.GetComponent<ArenaAgent>();
+                swordParentTeamIDCache[other] = swordParentAgent;
+            }
 
-            if (swordParentAgent == teamID)
+            if (swordParentAgent.teamID == teamID)
             {
                 return;
             }
-            print("Player: " + teamID + " was hit by Player: " + swordParentAgent);
+            print("Player: " + teamID + " was hit by Player: " + swordParentAgent.teamID);
 
             var dir = transform.position - other.transform.position;
             dir.y = 0;
             dir.Normalize();
             rb.AddForce(dir * m_knockback, ForceMode.Impulse);
-            m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>());
+            m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), swordParentAgent.GetComponent<ArenaAgent>());
 
             var damage = DamagePerHit;
 
@@ -97,8 +97,8 @@ public class AgentHealth : MonoBehaviour
                 Dead = true;
                 rb.isKinematic = true;
                 CubeBody.SetActive(false);
-                DeathCube.transform.position = CubeBody.transform.position;
-                DeathCube.SetActive(true);
+                // DeathCube.transform.position = CubeBody.transform.position;
+
                 ExplosionParticles.transform.position = CubeBody.transform.position;
                 ExplosionParticles.SetActive(true);
             }
@@ -109,6 +109,23 @@ public class AgentHealth : MonoBehaviour
         }
     }
 
+    public static Transform GetAncestorAtLevel(Transform child, int level)
+    {
+        Transform currentParent = child;
+        for (int i = 0; i < level; i++)
+        {
+            if (currentParent.parent != null)
+            {
+                currentParent = currentParent.parent;
+            }
+            else
+            {
+                return currentParent;
+            }
+        }
+        return currentParent;
+    }
+
     public void ResetHealth()
     {
         CurrentPercentage = 100;
@@ -116,24 +133,12 @@ public class AgentHealth : MonoBehaviour
         Dead = false;
         IsOnFinalHit = false;
         CubeBody.SetActive(true);
-        DeathCube.SetActive(false);
         ExplosionParticles.SetActive(false);
     }
 
     private IEnumerator BodyDamageFlash()
     {
         WaitForFixedUpdate wait = new WaitForFixedUpdate();
-        try
-        {
-            if (bodyMesh)
-            {
-                bodyMesh.material.color = damageColor;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error: " + e.Message);
-        }
 
         float timer = 0;
         while (timer < damageFlashDuration)
@@ -142,17 +147,7 @@ public class AgentHealth : MonoBehaviour
             yield return wait;
         }
 
-        try
-        {
-            if (bodyMesh)
-            {
-                bodyMesh.material.color = startingColor;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error: " + e.Message);
-        }
+
     }
 
 
