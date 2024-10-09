@@ -7,51 +7,56 @@ using UnityEngine;
 */
 public class Eyes : MonoBehaviour
 {
+    public Transform Eye;
+    [Range(0.5f, 10f)]
+    public float Speed = 1f;
+    [Range(0f, 5f)]
+    public float GravityMultiplier = 1f;
+    [Range(0.01f, 0.98f)]
+    public float Bounciness = 0.4f;
 
-    public Transform pupil;
-    public float maxPupilDistance = 0.1f;
-    public float gravity = 10f;
-    public float bounceDamping = 0.8f;
-
-    private Vector3 prevPosition;
-    private Vector3 prevVelocity;
-    private Vector3 velocity;
+    private Vector3 _velocity;
+    private Vector3 _lastPosition;
 
     void Start()
     {
-        prevPosition = transform.localPosition;
-        prevVelocity = Vector3.zero;
-        velocity = Vector3.zero;
+        _lastPosition = transform.position;
     }
 
     void Update()
     {
-        Vector3 currentParentVelocity = (transform.parent.position - prevPosition) / Time.deltaTime;
-        prevPosition = transform.parent.position;
+        const float maxDistance = 0.25f;
 
-        Vector3 acceleration = (currentParentVelocity - prevVelocity) / Time.deltaTime;
-        prevVelocity = currentParentVelocity;
+        var currentPosition = transform.position;
 
-        velocity += acceleration * Time.deltaTime;
-        velocity.y -= gravity * Time.deltaTime;
+        var gravity = transform.InverseTransformDirection(-9.83f * Vector3.up);
 
-        Vector3 targetPosition = new Vector3(velocity.x * maxPupilDistance, 0, velocity.z * maxPupilDistance);
+        _velocity += gravity * GravityMultiplier * Time.deltaTime;
+        _velocity += transform.InverseTransformVector((_lastPosition - currentPosition)) * 500f * Time.deltaTime;
+        _velocity.z = 0f;
 
-        targetPosition.x = Mathf.Clamp(targetPosition.x, -maxPupilDistance, maxPupilDistance);
-        targetPosition.z = Mathf.Clamp(targetPosition.z, -maxPupilDistance, maxPupilDistance);
+        var position = Eye.localPosition;
 
-        if (Mathf.Abs(targetPosition.x) >= maxPupilDistance)
+        position += _velocity * Speed * Time.deltaTime;
+
+        var direction = new Vector2(position.x, position.y);
+        var angle = Mathf.Atan2(direction.y, direction.x);
+
+        if (direction.magnitude > maxDistance)
         {
-            velocity.x = -velocity.x * bounceDamping;
-            targetPosition.x = Mathf.Sign(targetPosition.x) * maxPupilDistance;
+            var normal = -direction.normalized;
+
+            _velocity = Vector2.Reflect(new Vector2(_velocity.x, _velocity.y), normal) * Bounciness;
+
+            position = new Vector3(
+                Mathf.Cos(angle) * maxDistance,
+                Mathf.Sin(angle) * maxDistance,
+                0f
+            );
         }
 
-        if (Mathf.Abs(targetPosition.z) >= maxPupilDistance)
-        {
-            velocity.z = -velocity.z * bounceDamping;
-            targetPosition.z = Mathf.Sign(targetPosition.z) * maxPupilDistance;
-        }
-
-        pupil.localPosition = targetPosition;
+        position.z = Eye.localPosition.z;
+        Eye.localPosition = position;
+        _lastPosition = transform.position;
     }
 }

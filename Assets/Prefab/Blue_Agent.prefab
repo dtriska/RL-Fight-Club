@@ -336,10 +336,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a55dac83e22c74486a73a2e2e24249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pupil: {fileID: 7710075860951013845}
-  maxPupilDistance: 0.1
-  gravity: 10
-  bounceDamping: 0.8
+  Eye: {fileID: 7710075860951013845}
+  Speed: 1
+  GravityMultiplier: 1
+  Bounciness: 0.4
 --- !u!1 &415121299654740481
 GameObject:
   m_ObjectHideFlags: 0
@@ -9054,10 +9054,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a55dac83e22c74486a73a2e2e24249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pupil: {fileID: 5371301636028389369}
-  maxPupilDistance: 0.1
-  gravity: 10
-  bounceDamping: 0.8
+  Eye: {fileID: 5371301636028389369}
+  Speed: 1
+  GravityMultiplier: 1
+  Bounciness: 0.4
 --- !u!1 &8714843151659775685
 GameObject:
   m_ObjectHideFlags: 0
