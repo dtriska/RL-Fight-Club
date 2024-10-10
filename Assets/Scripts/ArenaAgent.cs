@@ -86,15 +86,38 @@ public class ArenaAgent : Agent
     }
 
     private int m_AgentStepCount; //current agent step
+    [Header("STAMINA")]
+    public float stamina = 100f;  // Starting stamina
+    public float maxStamina = 100f;
+    public float staminaRegenRate = 10f; // Stamina regenerated per second
+    public float staminaDepletionRate = 20f; // Stamina depleted per attack or dash
+
     void FixedUpdate()
     {
         m_DashCoolDownReady = m_CubeMovement.dashCoolDownTimer > m_CubeMovement.dashCoolDownDuration;
+
+        // Regenerate stamina every frame
+        RegenerateStamina();
+
         if (StepCount % 5 == 0)
         {
             m_IsDecisionStep = true;
             m_AgentStepCount++;
         }
     }
+
+    private void RegenerateStamina()
+    {
+        // Regenerate stamina up to the max stamina limit
+        stamina = Mathf.Min(stamina + staminaRegenRate * Time.fixedDeltaTime, maxStamina);
+    }
+
+    public void UseStamina(float amount)
+    {
+        stamina -= amount;
+        stamina = Mathf.Max(stamina, 0); // Ensure stamina doesn't drop below 0
+    }
+
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -169,29 +192,43 @@ public class ArenaAgent : Agent
         m_AttackInput = (int)discreteActions[0];
         m_DashInput = (int)discreteActions[1];
 
-        //HANDLE ROTATION
+        // HANDLE ROTATION
         m_CubeMovement.Look(m_Rotate);
 
-        //HANDLE XZ MOVEMENT
+        // HANDLE XZ MOVEMENT
         var moveDir = transform.TransformDirection(new Vector3(m_InputH, 0, m_InputV));
         m_CubeMovement.RunOnGround(moveDir);
 
-        //perform discrete actions only once between decisions
+        // Perform discrete actions only once between decisions
         if (m_IsDecisionStep)
         {
             m_IsDecisionStep = false;
-            //HANDLE ATTACKING
-            if (m_AttackInput > 0)
+
+            // Find the closest enemy
+            ArenaAgent closestEnemy = GetClosestEnemy();
+            if (closestEnemy != null)
             {
-                m_CubeMovement.Attack();
+                // Calculate distance to the closest enemy
+                float distanceToEnemy = Vector3.Distance(transform.position, closestEnemy.transform.position);
+
+                // HANDLE ATTACKING
+                if (m_AttackInput > 0 && stamina >= staminaDepletionRate)  // Check if stamina is sufficient
+                {
+                    m_CubeMovement.Attack(AgentHealth.CurrentPercentage, distanceToEnemy, stamina);  // Pass health, distance, and stamina
+                    UseStamina(staminaDepletionRate);  // Decrease stamina when attacking
+                }
             }
-            //HANDLE DASH MOVEMENT
-            if (m_DashInput > 0 && m_DashCoolDownReady)
+
+            // HANDLE DASH MOVEMENT
+            if (m_DashInput > 0 && m_DashCoolDownReady && stamina >= staminaDepletionRate)  // Check stamina for dashing
             {
                 m_CubeMovement.Dash(moveDir);
+                UseStamina(staminaDepletionRate);  // Decrease stamina when dashing
             }
         }
     }
+
+
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
@@ -213,4 +250,39 @@ public class ArenaAgent : Agent
         discreteActionsOut[0] = input.CheckIfInputSinceLastFrame(ref input.m_attackPressed) ? 1 : 0; //attack
         discreteActionsOut[1] = input.CheckIfInputSinceLastFrame(ref input.m_dashPressed) ? 1 : 0; //dash
     }
+
+
+    public ArenaAgent GetClosestEnemy()
+    {
+        List<AreaGameController.PlayerInfo> opponentsList;
+
+        // Determine which team the agent is on and find the opponents
+        if (m_BehaviorParameters.TeamId == 0)
+        {
+            opponentsList = m_GameController.Team1Players;
+        }
+        else
+        {
+            opponentsList = m_GameController.Team0Players;
+        }
+
+        ArenaAgent closestEnemy = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (var opponent in opponentsList)
+        {
+            if (opponent.Agent.gameObject.activeInHierarchy)
+            {
+                float distance = Vector3.Distance(transform.position, opponent.Agent.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = opponent.Agent;
+                }
+            }
+        }
+
+        return closestEnemy;
+    }
+
 }

@@ -80,10 +80,8 @@ namespace MLAgents
         {
             dashCoolDownTimer += Time.fixedDeltaTime;
 
-
             if (m_Agent)
             {
-                //this disables the heuristic input collection
                 m_Agent.disableInputCollectionInHeuristicCallback = allowHumanInputAndDisableAgentHeuristicInput;
             }
             if (!allowHumanInputAndDisableAgentHeuristicInput)
@@ -98,6 +96,7 @@ namespace MLAgents
                 inputH = m_Input.moveInput.x;
                 inputV = m_Input.moveInput.y;
             }
+
             var movDir = transform.TransformDirection(new Vector3(inputH, 0, inputV));
             RunOnGround(movDir);
             Look(rotate);
@@ -106,11 +105,16 @@ namespace MLAgents
             {
                 Dash(rb.transform.TransformDirection(new Vector3(inputH, 0, inputV)));
             }
-            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_attackPressed))
-            {
-                Attack();
-            }
+
+            // Calculate distance to enemy (example logic, adjust based on your game setup)
+            float distanceToEnemy = Vector3.Distance(transform.position, m_Agent.GetClosestEnemy().transform.position);
+
+            // Call the enhanced Attack method, passing health, distance, and stamina
+            float health = GetComponent<AgentHealth>().CurrentPercentage;
+            float stamina = m_Agent.stamina; // Assume you have a stamina variable
+            Attack(health, distanceToEnemy, stamina);
         }
+
 
         public void Dash(Vector3 dir)
         {
@@ -132,14 +136,42 @@ namespace MLAgents
             anim.SetFloat("Vertical", dir.y);
         }
 
-        public void Attack()
+        public void Attack(float health, float distanceToEnemy, float stamina)
         {
-            if (!IsAnimationPlaying("LightAttack"))
+            if (stamina > 50 && distanceToEnemy > 5) // High stamina and far distance = heavy attack
             {
-                anim.SetTrigger("Light");
+                if (!IsAnimationPlaying("HeavyAttack"))
+                {
+                    anim.SetTrigger("Heavy");
+                    m_Agent.UseStamina(20f); // Use stamina for heavy attack
+                }
             }
-
+            else if (stamina > 20) // Light attack if stamina is moderate
+            {
+                if (!IsAnimationPlaying("LightAttack"))
+                {
+                    anim.SetTrigger("Light");
+                    m_Agent.UseStamina(10f); // Use stamina for light attack
+                }
+            }
+            else if (health < 20) // Low health = more likely to block
+            {
+                if (!IsAnimationPlaying("Block"))
+                {
+                    anim.SetTrigger("Block");
+                }
+            }
+            else // Default to block if stamina is low
+            {
+                if (!IsAnimationPlaying("Block"))
+                {
+                    anim.SetTrigger("Block");
+                }
+            }
         }
+
+
+
 
 
         private bool IsAnimationPlaying(string animName)
