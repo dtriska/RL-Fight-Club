@@ -183,7 +183,7 @@ public class ArenaAgent : Agent
             //HANDLE ATTACKING
             if (m_AttackInput > 0)
             {
-                m_CubeMovement.Attack();
+                m_CubeMovement.Attack(AgentHealth.CurrentPercentage);
             }
             //HANDLE DASH MOVEMENT
             if (m_DashInput > 0 && m_DashCoolDownReady)

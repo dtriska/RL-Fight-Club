@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using MLAgents;
 
 public class AgentHealth : MonoBehaviour
 {
@@ -59,6 +60,12 @@ public class AgentHealth : MonoBehaviour
         {
             return;
         }
+
+if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
+    {
+        // If blocking, ignore the damage and exit
+        return;
+    }
 
 
         if (!other.CompareTag("Sword"))

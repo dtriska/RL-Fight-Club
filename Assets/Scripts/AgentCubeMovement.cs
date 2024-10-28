@@ -43,7 +43,7 @@ namespace MLAgents
         public float agentFallingSpeed = 50f;
 
         private Rigidbody rb;
-        private Animator anim;
+        public Animator anim;
         private float inputH;
         private float inputV;
         ArenaAgentInput m_Input;
@@ -108,7 +108,7 @@ namespace MLAgents
             }
             if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_attackPressed))
             {
-                Attack();
+                Attack(m_Agent.AgentHealth.CurrentPercentage); //HEALTH
             }
         }
 
@@ -132,17 +132,30 @@ namespace MLAgents
             anim.SetFloat("Vertical", dir.y);
         }
 
-        public void Attack()
+        public void Attack(float health)
         {
-            if (!IsAnimationPlaying("LightAttack"))
+            if (health <= 50)
             {
-                anim.SetTrigger("Light");
+                if (!IsAnimationPlaying("Block"))
+                {
+                    anim.SetTrigger("Block");
+                }
             }
-
+            else // Choose between light and heavy attack
+            {
+                if (!IsAnimationPlaying("HeavyAttack"))
+                {
+                    anim.SetTrigger("Heavy");
+                }
+                else if (!IsAnimationPlaying("LightAttack"))
+                {
+                    anim.SetTrigger("Light");
+                }
+            }
         }
 
 
-        private bool IsAnimationPlaying(string animName)
+        public bool IsAnimationPlaying(string animName)
         {
             return anim.GetCurrentAnimatorStateInfo(0).IsName(animName);
         }
