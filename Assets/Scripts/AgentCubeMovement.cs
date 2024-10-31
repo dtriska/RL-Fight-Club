@@ -134,25 +134,46 @@ namespace MLAgents
 
         public void Attack(float health)
         {
+            // Prioritize blocking if health is very low
             if (health <= 50)
             {
-                if (!IsAnimationPlaying("Block"))
+                
+                    
+
+                if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
                 {
-                    anim.SetTrigger("Block");
+                    int attackChoice = Random.Range(0, 4); // 0 for light, 1 for heavy
+                    if (attackChoice == 0)
+                    {
+                        anim.SetTrigger("Light");
+                    }
+                    else if (attackChoice == 1)
+                    {
+                        anim.SetTrigger("Heavy");
+                    }
+                    else
+                    {
+                        anim.SetTrigger("Block");
+                    }
                 }
             }
-            else // Choose between light and heavy attack
+            else // Randomly choose between light and heavy attack
             {
-                if (!IsAnimationPlaying("HeavyAttack"))
+                if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack"))
                 {
-                    anim.SetTrigger("Heavy");
-                }
-                else if (!IsAnimationPlaying("LightAttack"))
-                {
-                    anim.SetTrigger("Light");
+                    int attackChoice = Random.Range(0, 2); // 0 for light, 1 for heavy
+                    if (attackChoice == 0)
+                    {
+                        anim.SetTrigger("Light");
+                    }
+                    else
+                    {
+                        anim.SetTrigger("Heavy");
+                    }
                 }
             }
         }
+
 
 
         public bool IsAnimationPlaying(string animName)
