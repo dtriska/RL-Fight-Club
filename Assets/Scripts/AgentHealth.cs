@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using MLAgents;
 
 public class AgentHealth : MonoBehaviour
 {
@@ -14,18 +15,20 @@ public class AgentHealth : MonoBehaviour
     public float CurrentPercentage = 100;
     public Slider UISlider;
 
-    public MeshRenderer bodyMesh;
     public Color damageColor;
     public Color startingColor;
     public float damageFlashDuration = .02f;
 
     public GameObject CubeBody;
-    public GameObject DeathCube;
     public GameObject ExplosionParticles;
     public bool Dead;
     public float DamagePerHit = 15f;
 
+//ADDITIONAL TO EDIT IN
+public float DamagePerHitHEAVY = 40f;
+
     private Rigidbody rb;
+    private static Dictionary<Collider, ArenaAgent> swordParentTeamIDCache = new Dictionary<Collider, ArenaAgent>();
 
     void OnEnable()
     {
@@ -34,11 +37,6 @@ public class AgentHealth : MonoBehaviour
         if (UISlider)
         {
             UISlider.value = CurrentPercentage;
-        }
-
-        if (bodyMesh)
-        {
-            startingColor = bodyMesh.sharedMaterial.color;
         }
 
         rb = GetComponent<Rigidbody>();
@@ -59,54 +57,101 @@ public class AgentHealth : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+//////////////////
+private void OnTriggerEnter(Collider other)
+{
+    if (Dead)
     {
-        if (Dead)
-        {
-            return;
-        }
+        return;
+    }
 
+    // Check if the agent is blocking; if so, ignore the damage and exit
+    if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
+    {
+        return;
+    }
 
-        if (!other.CompareTag("Sword"))
-        {
-            return;
-        }
-        else
-        {
-            var swordParentAgent = other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>().teamID;
+    // Check if the collision object is tagged as a Sword
+    if (!other.CompareTag("Sword"))
+    {
+        return;
+    }
 
-            if (swordParentAgent == teamID)
+    // Get the sword's parent agent (the attacker) from cache or hierarchy
+    ArenaAgent swordParentAgent;
+    if (!swordParentTeamIDCache.TryGetValue(other, out swordParentAgent))
+    {
+        Transform parentAgent = GetAncestorAtLevel(other.transform, 9);
+        swordParentAgent = parentAgent.GetComponent<ArenaAgent>();
+        swordParentTeamIDCache[other] = swordParentAgent;
+    }
+
+    // Ignore if the attacker is on the same team
+    if (swordParentAgent.teamID == teamID)
+    {
+        return;
+    }
+
+    print("Player: " + teamID + " was hit by Player: " + swordParentAgent.teamID);
+
+    // Apply knockback force
+    var dir = transform.position - other.transform.position;
+    dir.y = 0;
+    dir.Normalize();
+    rb.AddForce(dir * m_knockback, ForceMode.Impulse);
+
+    // Notify the game controller that this agent was hit
+    m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), swordParentAgent.GetComponent<ArenaAgent>());
+
+    // Check if the attacker is performing a heavy or light attack and set damage accordingly
+    float damage = DamagePerHit; // Default to light attack damage
+    AgentCubeMovement attackerMovement = swordParentAgent.GetComponent<AgentCubeMovement>();
+
+    if (attackerMovement.IsAnimationPlaying("HeavyAttack"))
+    {
+        damage = DamagePerHitHEAVY;
+    }
+    else if (attackerMovement.IsAnimationPlaying("LightAttack"))
+    {
+        damage = DamagePerHit;
+    }
+
+    // Apply the calculated damage
+    CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
+    IsOnFinalHit = (CurrentPercentage - damage) <= 0;
+
+    if (CurrentPercentage == 0)
+    {
+        Dead = true;
+        rb.isKinematic = true;
+        CubeBody.SetActive(false);
+        
+        ExplosionParticles.transform.position = CubeBody.transform.position;
+        ExplosionParticles.SetActive(true);
+    }
+
+    if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game && m_GameController.ShouldPlayEffects)
+    {
+        StartCoroutine(BodyDamageFlash());
+    }
+}
+////////////////
+
+    public static Transform GetAncestorAtLevel(Transform child, int level)
+    {
+        Transform currentParent = child;
+        for (int i = 0; i < level; i++)
+        {
+            if (currentParent.parent != null)
             {
-                return;
+                currentParent = currentParent.parent;
             }
-            print("Player: " + teamID + " was hit by Player: " + swordParentAgent);
-
-            var dir = transform.position - other.transform.position;
-            dir.y = 0;
-            dir.Normalize();
-            rb.AddForce(dir * m_knockback, ForceMode.Impulse);
-            m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), other.gameObject.transform.parent.parent.GetComponent<ArenaAgent>());
-
-            var damage = DamagePerHit;
-
-            CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
-            IsOnFinalHit = (CurrentPercentage - DamagePerHit) <= 0;
-
-            if (CurrentPercentage == 0)
+            else
             {
-                Dead = true;
-                rb.isKinematic = true;
-                CubeBody.SetActive(false);
-                DeathCube.transform.position = CubeBody.transform.position;
-                DeathCube.SetActive(true);
-                ExplosionParticles.transform.position = CubeBody.transform.position;
-                ExplosionParticles.SetActive(true);
+                return currentParent;
             }
-
-            if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game && m_GameController.ShouldPlayEffects)
-                StartCoroutine(BodyDamageFlash());
-
         }
+        return currentParent;
     }
 
     public void ResetHealth()
@@ -116,24 +161,12 @@ public class AgentHealth : MonoBehaviour
         Dead = false;
         IsOnFinalHit = false;
         CubeBody.SetActive(true);
-        DeathCube.SetActive(false);
         ExplosionParticles.SetActive(false);
     }
 
     private IEnumerator BodyDamageFlash()
     {
         WaitForFixedUpdate wait = new WaitForFixedUpdate();
-        try
-        {
-            if (bodyMesh)
-            {
-                bodyMesh.material.color = damageColor;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error: " + e.Message);
-        }
 
         float timer = 0;
         while (timer < damageFlashDuration)
@@ -142,17 +175,7 @@ public class AgentHealth : MonoBehaviour
             yield return wait;
         }
 
-        try
-        {
-            if (bodyMesh)
-            {
-                bodyMesh.material.color = startingColor;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Error: " + e.Message);
-        }
+
     }
 
 

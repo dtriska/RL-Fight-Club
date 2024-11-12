@@ -41,7 +41,6 @@ public class ArenaAgent : Agent
 
     [Header("SWORD")]
     public float m_knockback = 10f;
-    [SerializeField] private Animation m_swordSwing;
 
     private bool m_IsDecisionStep;
     [HideInInspector]
@@ -184,7 +183,7 @@ public class ArenaAgent : Agent
             //HANDLE ATTACKING
             if (m_AttackInput > 0)
             {
-                Attack();
+                m_CubeMovement.Attack(AgentHealth.CurrentPercentage);
             }
             //HANDLE DASH MOVEMENT
             if (m_DashInput > 0 && m_DashCoolDownReady)
@@ -197,14 +196,6 @@ public class ArenaAgent : Agent
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
         MoveAgent(actionBuffers);
-    }
-
-    public void Attack()
-    {
-        if (!m_swordSwing.isPlaying) // Play only if not already playing
-        {
-            m_swordSwing.Play();
-        }
     }
 
     // HUMAN INPUT
