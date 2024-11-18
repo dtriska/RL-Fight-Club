@@ -130,7 +130,7 @@ private void OnTriggerEnter(Collider other)
         ExplosionParticles.SetActive(true);
     }
 
-    if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game && m_GameController.ShouldPlayEffects)
+    if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game)
     {
         StartCoroutine(BodyDamageFlash());
     }
