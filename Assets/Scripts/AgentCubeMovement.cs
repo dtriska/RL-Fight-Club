@@ -106,9 +106,18 @@ namespace MLAgents
             {
                 Dash(rb.transform.TransformDirection(new Vector3(inputH, 0, inputV)));
             }
-            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_attackPressed))
+            
+            // Can only do one action at a time combined with a Dash
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput))
             {
-                Attack(m_Agent.AgentHealth.CurrentPercentage); //HEALTH
+                Attack("Light");
+                
+            } else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput))
+            {
+                Attack("Heavy");
+            } else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed))
+            {
+                Attack("Block");
             }
         }
 
@@ -132,49 +141,24 @@ namespace MLAgents
             anim.SetFloat("Vertical", dir.y);
         }
 
-        public void Attack(float health)
+        public void Attack(string attack)
         {
-            // Prioritize blocking if health is very low
-            if (health <= 50)
+            if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
             {
-                
-                    
-
-                if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
+                if (attack == "Light")
                 {
-                    int attackChoice = Random.Range(0, 4); // 0 for light, 1 for heavy
-                    if (attackChoice == 0)
-                    {
-                        anim.SetTrigger("Light");
-                    }
-                    else if (attackChoice == 1)
-                    {
-                        anim.SetTrigger("Heavy");
-                    }
-                    else
-                    {
-                        anim.SetTrigger("Block");
-                    }
+                    anim.SetTrigger("Light");
                 }
-            }
-            else // Randomly choose between light and heavy attack
-            {
-                if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack"))
+                else if (attack == "Heavy")
                 {
-                    int attackChoice = Random.Range(0, 2); // 0 for light, 1 for heavy
-                    if (attackChoice == 0)
-                    {
-                        anim.SetTrigger("Light");
-                    }
-                    else
-                    {
-                        anim.SetTrigger("Heavy");
-                    }
+                    anim.SetTrigger("Heavy");
+                }
+                else if (attack == "Block")
+                {
+                    anim.SetTrigger("Block");
                 }
             }
         }
-
-
 
         public bool IsAnimationPlaying(string animName)
         {

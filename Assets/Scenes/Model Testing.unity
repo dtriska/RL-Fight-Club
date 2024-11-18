@@ -1364,6 +1364,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue_Agent
       objectReference: {fileID: 0}
+    - target: {fileID: 9107796167158813601, guid: b2597ee1b5d15244b897ef14a75b76b4, type: 3}
+      propertyPath: m_BrainParameters.m_ActionSpec.BranchSizes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9107796167158813601, guid: b2597ee1b5d15244b897ef14a75b76b4, type: 3}
+      propertyPath: 'm_BrainParameters.m_ActionSpec.BranchSizes.Array.data[2]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9107796167158813601, guid: b2597ee1b5d15244b897ef14a75b76b4, type: 3}
+      propertyPath: 'm_BrainParameters.m_ActionSpec.BranchSizes.Array.data[3]'
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

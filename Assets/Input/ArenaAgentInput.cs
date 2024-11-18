@@ -8,7 +8,9 @@ public class ArenaAgentInput : MonoBehaviour
     private ArenaInputActions inputActions;
     private ArenaInputActions.PlayerActions actionMap;
     public Vector2 moveInput;
-    public bool m_attackPressed;
+    public bool m_LightAttackInput;
+    public bool m_HeavyAttackInput;
+    public bool m_blockPressed;
     public bool m_dashPressed;
     public float rotateInput;
     void Awake()
@@ -52,9 +54,17 @@ public class ArenaAgentInput : MonoBehaviour
         }
         moveInput = actionMap.Walk.ReadValue<Vector2>();
         rotateInput = actionMap.Rotate.ReadValue<float>();
-        if (actionMap.Attack.triggered)
+        if (actionMap.LightAttack.triggered)
         {
-            m_attackPressed = true;
+            m_LightAttackInput = true;
+        }
+        if (actionMap.HeavyAttack.triggered)
+        {
+            m_HeavyAttackInput = true;
+        }
+        if (actionMap.Block.triggered)
+        {
+            m_blockPressed = true;
         }
         if (actionMap.Dash.triggered)
         {

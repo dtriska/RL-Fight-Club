@@ -24,8 +24,7 @@ public class AgentHealth : MonoBehaviour
     public bool Dead;
     public float DamagePerHit = 15f;
 
-//ADDITIONAL TO EDIT IN
-public float DamagePerHitHEAVY = 40f;
+    public float DamagePerHitHEAVY = 40f;
 
     private Rigidbody rb;
     private static Dictionary<Collider, ArenaAgent> swordParentTeamIDCache = new Dictionary<Collider, ArenaAgent>();

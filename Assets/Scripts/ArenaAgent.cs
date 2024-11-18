@@ -32,8 +32,11 @@ public class ArenaAgent : Agent
     private float m_InputH;
     private float m_InputV;
     private float m_Rotate;
-    private float m_AttackInput;
     private float m_DashInput;
+    private float m_LightAttackInput;
+    private float m_HeavyAttackInput;
+    private float m_BlockInput;
+
     private bool m_FirstInitialize = true;
     private bool m_DashCoolDownReady;
     private float m_LocationNormalizationFactor = 80.0f; // About the size of a reasonable stage
@@ -166,8 +169,10 @@ public class ArenaAgent : Agent
         m_InputV = continuousActions[0];
         m_InputH = continuousActions[1];
         m_Rotate = continuousActions[2];
-        m_AttackInput = (int)discreteActions[0];
-        m_DashInput = (int)discreteActions[1];
+        m_LightAttackInput = (int)discreteActions[0];
+        m_HeavyAttackInput = (int)discreteActions[1];
+        m_BlockInput = (int)discreteActions[2];
+        m_DashInput = (int)discreteActions[3];
 
         //HANDLE ROTATION
         m_CubeMovement.Look(m_Rotate);
@@ -181,9 +186,17 @@ public class ArenaAgent : Agent
         {
             m_IsDecisionStep = false;
             //HANDLE ATTACKING
-            if (m_AttackInput > 0)
+            if (m_LightAttackInput > 0)
             {
-                m_CubeMovement.Attack(AgentHealth.CurrentPercentage);
+                m_CubeMovement.Attack("Light");
+            }
+            else if (m_HeavyAttackInput > 0)
+            {
+                m_CubeMovement.Attack("Heavy");
+            }
+            else if (m_BlockInput > 0)
+            {
+                m_CubeMovement.Attack("Block");
             }
             //HANDLE DASH MOVEMENT
             if (m_DashInput > 0 && m_DashCoolDownReady)
@@ -210,7 +223,9 @@ public class ArenaAgent : Agent
         contActionsOut[1] = input.moveInput.x;
         contActionsOut[2] = input.rotateInput * 3; //rotate
         var discreteActionsOut = actionsOut.DiscreteActions;
-        discreteActionsOut[0] = input.CheckIfInputSinceLastFrame(ref input.m_attackPressed) ? 1 : 0; //attack
-        discreteActionsOut[1] = input.CheckIfInputSinceLastFrame(ref input.m_dashPressed) ? 1 : 0; //dash
+        discreteActionsOut[0] = input.CheckIfInputSinceLastFrame(ref input.m_LightAttackInput) ? 1 : 0; // light attack
+        discreteActionsOut[1] = input.CheckIfInputSinceLastFrame(ref input.m_HeavyAttackInput) ? 1 : 0; // heavy attack
+        discreteActionsOut[2] = input.CheckIfInputSinceLastFrame(ref input.m_blockPressed) ? 1 : 0; //block
+        discreteActionsOut[3] = input.CheckIfInputSinceLastFrame(ref input.m_dashPressed) ? 1 : 0; //dash
     }
 }
