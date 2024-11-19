@@ -1,0 +1,29 @@
+{
+    "Arena": {
+        "checkpoints": [
+            {
+                "steps": 28800,
+                "file_path": "results\\CombatRevamp\\Arena\\Arena-28800.onnx",
+                "reward": null,
+                "creation_time": 1731918143.7547333,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp\\Arena\\Arena-28800.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 28800,
+            "file_path": "results\\CombatRevamp\\Arena.onnx",
+            "reward": null,
+            "creation_time": 1731918143.7547333,
+            "auxillary_file_paths": [
+                "results\\CombatRevamp\\Arena\\Arena-28800.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

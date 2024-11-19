@@ -9290,12 +9290,12 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 3
-      BranchSizes: 0200000002000000
+      BranchSizes: 02000000020000000200000002000000
     VectorActionSize: 
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: cb711b8c5b0e5144b81ded614d8e4d42, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Arena
@@ -9356,9 +9356,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ee5d3b6a8181c42a26f917bd9ccf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisableInput: 0
+  DisableInput: 1
   moveInput: {x: 0, y: 0}
-  m_attackPressed: 0
+  m_LightAttackInput: 0
+  m_HeavyAttackInput: 0
+  m_blockPressed: 0
   m_dashPressed: 0
   rotateInput: 0
 --- !u!114 &7523919560186242601
@@ -9386,6 +9388,7 @@ MonoBehaviour:
   MouseSensitivity: 10
   MouseSmoothTime: 0.01
   agentFallingSpeed: 80
+  anim: {fileID: 0}
 --- !u!114 &1617338172063200810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9410,6 +9413,7 @@ MonoBehaviour:
   ExplosionParticles: {fileID: 5382765808696998951}
   Dead: 0
   DamagePerHit: 15
+  DamagePerHitHEAVY: 40
 --- !u!1 &9112160036787115506
 GameObject:
   m_ObjectHideFlags: 0

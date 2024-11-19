@@ -96,6 +96,14 @@ PrefabInstance:
       propertyPath: TeamId
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9107796167158813601, guid: b2597ee1b5d15244b897ef14a75b76b4, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9107796167158813601, guid: b2597ee1b5d15244b897ef14a75b76b4, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

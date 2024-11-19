@@ -27,7 +27,6 @@ public class AreaGameController : MonoBehaviour
     public class PlayerInfo
     {
         public ArenaAgent Agent;
-        public int HitPointsRemaining;
         [HideInInspector]
         public Vector3 StartingPos;
         [HideInInspector]
@@ -106,6 +105,7 @@ public class AreaGameController : MonoBehaviour
         {
             m_NumberOfBluePlayersRemaining -= hitTeamID == 0 ? 1 : 0;
             m_NumberOfRedPlayersRemaining -= hitTeamID == 1 ? 1 : 0;
+            print("Blue Remaining: " + m_NumberOfBluePlayersRemaining + " Red Remaining: " + m_NumberOfRedPlayersRemaining);
             // The current agent was just killed and is the final agent
             if (m_NumberOfBluePlayersRemaining == 0 || m_NumberOfRedPlayersRemaining == 0 || hit.gameObject == PlayerGameObject)
             {
@@ -188,8 +188,9 @@ public class AreaGameController : MonoBehaviour
     {
         StopAllCoroutines();
 
-        m_NumberOfBluePlayersRemaining = 3;
-        m_NumberOfRedPlayersRemaining = 3;
+        m_NumberOfBluePlayersRemaining = Team0Players.Count;
+        m_NumberOfRedPlayersRemaining = Team1Players.Count;
+        print("RESET SCENE: Blue Remaining: " + m_NumberOfBluePlayersRemaining + " Red Remaining: " + m_NumberOfRedPlayersRemaining);
 
         m_ResetTimer = 0;
 

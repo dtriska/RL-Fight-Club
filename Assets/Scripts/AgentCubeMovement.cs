@@ -1,6 +1,7 @@
 //Standardized movement controller for the Agent Cube
 using Unity.MLAgents;
 using UnityEngine;
+using System.Collections;
 
 namespace MLAgents
 {
@@ -48,6 +49,7 @@ namespace MLAgents
         private float inputV;
         ArenaAgentInput m_Input;
 
+        private bool isAttacking = false;
         private ArenaAgent m_Agent;
         void Awake()
         {
@@ -91,6 +93,10 @@ namespace MLAgents
                 return;
             }
 
+            if (isAttacking) {
+                rb.velocity = Vector3.zero;
+            }
+
             float rotate = 0;
             if (!ReferenceEquals(null, m_Input))
             {
@@ -98,24 +104,30 @@ namespace MLAgents
                 inputH = m_Input.moveInput.x;
                 inputV = m_Input.moveInput.y;
             }
-            var movDir = transform.TransformDirection(new Vector3(inputH, 0, inputV));
-            RunOnGround(movDir);
+
+            if (!isAttacking) {
+                var movDir = transform.TransformDirection(new Vector3(inputH, 0, inputV));
+                RunOnGround(movDir);
+            }
+
             Look(rotate);
 
             if (m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_dashPressed))
             {
                 Dash(rb.transform.TransformDirection(new Vector3(inputH, 0, inputV)));
             }
-            
+
             // Can only do one action at a time combined with a Dash
             if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput))
             {
                 Attack("Light");
-                
-            } else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput))
+
+            }
+            else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput))
             {
                 Attack("Heavy");
-            } else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed))
+            }
+            else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed))
             {
                 Attack("Block");
             }
@@ -145,6 +157,7 @@ namespace MLAgents
         {
             if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
             {
+                isAttacking = true;
                 if (attack == "Light")
                 {
                     anim.SetTrigger("Light");
@@ -157,7 +170,15 @@ namespace MLAgents
                 {
                     anim.SetTrigger("Block");
                 }
+                StartCoroutine(ResetAttackState());
             }
+        }
+
+        private IEnumerator ResetAttackState()
+        {
+            // Wait for the attack animation to finish
+            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
+            isAttacking = false;
         }
 
         public bool IsAnimationPlaying(string animName)

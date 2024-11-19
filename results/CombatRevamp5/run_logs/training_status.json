@@ -1,0 +1,102 @@
+{
+    "Arena": {
+        "elo": 1495.440448229858,
+        "checkpoints": [
+            {
+                "steps": 202315,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-202315.onnx",
+                "reward": 0.39200001120567324,
+                "creation_time": 1731919266.8503213,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-202315.pt"
+                ]
+            },
+            {
+                "steps": 1999543,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-1999543.onnx",
+                "reward": 0.4714285768568516,
+                "creation_time": 1731922768.1514788,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-1999543.pt"
+                ]
+            },
+            {
+                "steps": 3999808,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-3999808.onnx",
+                "reward": 0.43500001057982446,
+                "creation_time": 1731926154.6140869,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-3999808.pt"
+                ]
+            },
+            {
+                "steps": 5999966,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-5999966.onnx",
+                "reward": 0.5500000074505806,
+                "creation_time": 1731929666.9556344,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-5999966.pt"
+                ]
+            },
+            {
+                "steps": 7999982,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-7999982.onnx",
+                "reward": 0.4882353070904227,
+                "creation_time": 1731933396.8265078,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-7999982.pt"
+                ]
+            },
+            {
+                "steps": 9999631,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-9999631.onnx",
+                "reward": 0.4568965649553414,
+                "creation_time": 1731936889.130132,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-9999631.pt"
+                ]
+            },
+            {
+                "steps": 11999372,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-11999372.onnx",
+                "reward": 0.5,
+                "creation_time": 1731940386.8028123,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-11999372.pt"
+                ]
+            },
+            {
+                "steps": 13999893,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-13999893.onnx",
+                "reward": 0.42352942289674983,
+                "creation_time": 1731944213.1523597,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-13999893.pt"
+                ]
+            },
+            {
+                "steps": 14140289,
+                "file_path": "results\\CombatRevamp5\\Arena\\Arena-14140289.onnx",
+                "reward": null,
+                "creation_time": 1731944511.2780728,
+                "auxillary_file_paths": [
+                    "results\\CombatRevamp5\\Arena\\Arena-14140289.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 14140289,
+            "file_path": "results\\CombatRevamp5\\Arena.onnx",
+            "reward": null,
+            "creation_time": 1731944511.2780728,
+            "auxillary_file_paths": [
+                "results\\CombatRevamp5\\Arena\\Arena-14140289.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

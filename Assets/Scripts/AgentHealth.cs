@@ -64,12 +64,6 @@ private void OnTriggerEnter(Collider other)
         return;
     }
 
-    // Check if the agent is blocking; if so, ignore the damage and exit
-    if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
-    {
-        return;
-    }
-
     // Check if the collision object is tagged as a Sword
     if (!other.CompareTag("Sword"))
     {
@@ -87,6 +81,12 @@ private void OnTriggerEnter(Collider other)
 
     // Ignore if the attacker is on the same team
     if (swordParentAgent.teamID == teamID)
+    {
+        return;
+    }
+
+    // Check if the agent is blocking; if so, ignore the damage and exit
+    if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
     {
         return;
     }
@@ -118,6 +118,8 @@ private void OnTriggerEnter(Collider other)
     // Apply the calculated damage
     CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
     IsOnFinalHit = (CurrentPercentage - damage) <= 0;
+
+    print("Player: " + teamID + " Name: " + this.gameObject.name + " health: " + CurrentPercentage + " IsOnFinalHit: " + IsOnFinalHit);
 
     if (CurrentPercentage == 0)
     {
