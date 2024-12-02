@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
+using TMPro;
+using UnityEngine.InputSystem;
 
 public class AreaGameController : MonoBehaviour
 {
@@ -22,7 +24,14 @@ public class AreaGameController : MonoBehaviour
     private int m_NumberOfRedPlayersRemaining = 3;
     private SimpleMultiAgentGroup m_Team0AgentGroup;
     private SimpleMultiAgentGroup m_Team1AgentGroup;
-    public bool ShouldPlayEffects = true;
+
+    public bool ShouldPlayEffects
+    {
+        get
+        {
+            return CurrentSceneType != SceneType.Training;
+        }
+    }
 
     [Serializable]
     public class PlayerInfo
@@ -44,19 +53,30 @@ public class AreaGameController : MonoBehaviour
     public bool usePoofParticlesOnElimination;
     public List<GameObject> poofParticlesList;
 
+    [Header("UI Audio")]
+    public AudioClip HurtVoiceAudioClip;
+    public AudioClip CountdownClip;
+    public AudioClip WinSoundFX1;
+    public AudioClip WinSoundFX2;
+    public AudioClip LoseSoundFX1;
+    public AudioClip LoseSoundFX2;
+    private AudioSource m_audioSource;
+
+    [Header("UI")]
+    public GameObject BlueTeamWonUI;
+    public GameObject RedTeamWonUI;
+    public TMP_Text CountDownText;
+
     private bool m_Initialized;
     public List<PlayerInfo> Team0Players;
     public List<PlayerInfo> Team1Players;
     private int m_ResetTimer;
     private float m_TimeBonus = 1.0f;
     private EnvironmentParameters m_EnvParameters;
-    private StatsRecorder m_StatsRecorder;
-
     public int MaxEnvironmentSteps = 5000;
 
     void Initialize()
     {
-        m_StatsRecorder = Academy.Instance.StatsRecorder;
         m_EnvParameters = Academy.Instance.EnvironmentParameters;
         m_Team0AgentGroup = new SimpleMultiAgentGroup();
         m_Team1AgentGroup = new SimpleMultiAgentGroup();
@@ -84,6 +104,12 @@ public class AreaGameController : MonoBehaviour
             {
                 item.SetActive(false);
             }
+        }
+
+        if (CurrentSceneType == SceneType.Game)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         m_Initialized = true;
@@ -129,12 +155,8 @@ public class AreaGameController : MonoBehaviour
                 {
                     // Don't poof the last agent
                     StartCoroutine(TumbleThenPoof(hit, false));
-                    ResetScene();
                 }
-                else
-                {
-                    ResetScene();
-                }
+                EndGame(throwTeamID);
             }
             else
             {
@@ -197,6 +219,46 @@ public class AreaGameController : MonoBehaviour
         }
     }
 
+    private bool m_GameEnded = false;
+    public void ShowWinScreen(int winningTeam, float delaySeconds)
+    {
+        if (m_GameEnded) return;
+        m_GameEnded = true;
+        StartCoroutine(ShowWinScreenThenReset(winningTeam, delaySeconds));
+    }
+
+    // End the game, resetting if in training mode and showing a win screen if in game mode.
+    public void EndGame(int winningTeam, float delaySeconds = 1.0f)
+    {
+        //GAME MODE
+        if (ShouldPlayEffects)
+        {
+            ShowWinScreen(winningTeam, delaySeconds);
+        }
+        //TRAINING MODE
+        else
+        {
+            ResetScene();
+        }
+    }
+
+    public IEnumerator ShowWinScreenThenReset(int winningTeam, float delaySeconds)
+    {
+        GameObject winTextGO = winningTeam == 0 ? BlueTeamWonUI : RedTeamWonUI;
+        AudioClip clipToUse1 = winningTeam == 0 ? WinSoundFX1 : LoseSoundFX1;
+        AudioClip clipToUse2 = winningTeam == 0 ? WinSoundFX2 : LoseSoundFX2;
+        yield return new WaitForSeconds(delaySeconds);
+        winTextGO.SetActive(true);
+        if (ShouldPlayEffects)
+        {
+            m_audioSource.PlayOneShot(clipToUse1, .05f);
+            m_audioSource.PlayOneShot(clipToUse2, .05f);
+        }
+
+        winTextGO.SetActive(false);
+        ResetScene();
+    }
+
     private void GetAllParameters()
     {
         //Set time bonus to 1 for Elimination
@@ -211,8 +273,6 @@ public class AreaGameController : MonoBehaviour
 
         m_NumberOfBluePlayersRemaining = Team0Players.Count;
         m_NumberOfRedPlayersRemaining = Team1Players.Count;
-        print("RESET SCENE: Blue Remaining: " + m_NumberOfBluePlayersRemaining + " Red Remaining: " + m_NumberOfRedPlayersRemaining);
-
         m_ResetTimer = 0;
 
         GetAllParameters();

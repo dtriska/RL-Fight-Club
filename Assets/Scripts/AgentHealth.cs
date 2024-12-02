@@ -54,18 +54,18 @@ public class AgentHealth : MonoBehaviour
         }
     }
 
-private void OnTriggerEnter(Collider other)
-{
-    if (Dead)
+    private void OnTriggerEnter(Collider other)
     {
-        return;
-    }
+        if (Dead)
+        {
+            return;
+        }
 
-    // Check if the agent is blocking; if so, ignore the damage and exit
-    if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
-    {
-        return;
-    }
+        // Check if the agent is blocking; if so, ignore the damage and exit
+        if (GetComponentInParent<AgentCubeMovement>().IsAnimationPlaying("Block"))
+        {
+            return;
+        }
 
         // Check if the collision object is tagged as a Sword
         if (!other.CompareTag("Sword"))
@@ -82,13 +82,12 @@ private void OnTriggerEnter(Collider other)
             swordParentTeamIDCache[other] = swordParentAgent;
         }
 
-    // Ignore if the attacker is on the same team
-    if (swordParentAgent.teamID == teamID)
-    {
-        return;
-    }
+        // Ignore if the attacker is on the same team
+        if (swordParentAgent.teamID == teamID)
+        {
+            return;
+        }
 
-        print("Player: " + teamID + " was hit by Player: " + swordParentAgent.teamID);
 
         // Apply knockback force
         var dir = transform.position - other.transform.position;
@@ -112,12 +111,12 @@ private void OnTriggerEnter(Collider other)
             damage = DamagePerHit;
         }
 
-    // Apply the calculated damage
-    CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
-    IsOnFinalHit = (CurrentPercentage - damage) <= 0;
+        // Apply the calculated damage
+        CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
+        IsOnFinalHit = (CurrentPercentage - damage) <= 0;
 
 
-}
+    }
 
     public static Transform GetAncestorAtLevel(Transform child, int level)
     {
