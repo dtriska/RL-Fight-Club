@@ -15,8 +15,6 @@ public class AgentHealth : MonoBehaviour
     public float CurrentPercentage = 100;
     public Slider UISlider;
 
-    public Color damageColor;
-    public Color startingColor;
     public float damageFlashDuration = .02f;
 
     public GameObject CubeBody;
@@ -56,7 +54,6 @@ public class AgentHealth : MonoBehaviour
         }
     }
 
-//////////////////
 private void OnTriggerEnter(Collider other)
 {
     if (Dead)
@@ -119,22 +116,8 @@ private void OnTriggerEnter(Collider other)
     CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
     IsOnFinalHit = (CurrentPercentage - damage) <= 0;
 
-        if (CurrentPercentage == 0)
-        {
-            Dead = true;
-            rb.isKinematic = true;
-            CubeBody.SetActive(false);
 
-            ExplosionParticles.transform.position = CubeBody.transform.position;
-            ExplosionParticles.SetActive(true);
-        }
-
-    if (!Dead && m_GameController.CurrentSceneType == AreaGameController.SceneType.Game)
-    {
-        StartCoroutine(BodyDamageFlash());
-    }
 }
-////////////////
 
     public static Transform GetAncestorAtLevel(Transform child, int level)
     {
@@ -163,19 +146,7 @@ private void OnTriggerEnter(Collider other)
         ExplosionParticles.SetActive(false);
     }
 
-    private IEnumerator BodyDamageFlash()
-    {
-        WaitForFixedUpdate wait = new WaitForFixedUpdate();
 
-        float timer = 0;
-        while (timer < damageFlashDuration)
-        {
-            timer += Time.fixedDeltaTime;
-            yield return wait;
-        }
-
-
-    }
 
 
 }

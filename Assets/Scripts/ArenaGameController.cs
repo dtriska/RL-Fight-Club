@@ -40,6 +40,10 @@ public class AreaGameController : MonoBehaviour
         public int TeamID;
     }
 
+    [Header("Visual Effects")]
+    public bool usePoofParticlesOnElimination;
+    public List<GameObject> poofParticlesList;
+
     private bool m_Initialized;
     public List<PlayerInfo> Team0Players;
     public List<PlayerInfo> Team1Players;
@@ -72,6 +76,14 @@ public class AreaGameController : MonoBehaviour
             item.Agent.m_BehaviorParameters.TeamId = 1;
             item.TeamID = 1;
             m_Team1AgentGroup.RegisterAgent(item.Agent);
+        }
+
+        if (usePoofParticlesOnElimination)
+        {
+            foreach (var item in poofParticlesList)
+            {
+                item.SetActive(false);
+            }
         }
 
         m_Initialized = true;
@@ -117,7 +129,7 @@ public class AreaGameController : MonoBehaviour
                 {
                     // Don't poof the last agent
                     StartCoroutine(TumbleThenPoof(hit, false));
-                    StartCoroutine(WaitAndResetScene());
+                    ResetScene();
                 }
                 else
                 {
@@ -143,7 +155,7 @@ public class AreaGameController : MonoBehaviour
         }
     }
 
-private IEnumerator WaitAndResetScene()
+    private IEnumerator WaitAndResetScene()
     {
         // Wait for the specified duration
         float delayBeforeReset = 3f;
@@ -155,24 +167,35 @@ private IEnumerator WaitAndResetScene()
 
     public IEnumerator TumbleThenPoof(ArenaAgent agent, bool shouldPoof = true)
     {
-        WaitForFixedUpdate wait = new WaitForFixedUpdate();
         // Add force to make the agent tumble
         agent.AgentRb.AddForce(Vector3.right * 2f, ForceMode.Impulse);
         agent.AgentRb.constraints = RigidbodyConstraints.None;
         agent.AgentRb.drag = .5f;
         agent.AgentRb.angularDrag = 0;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         if (shouldPoof)
         {
             agent.gameObject.SetActive(false);
             //Poof Particles
-            // if (usePoofParticlesOnElimination)
-            // {
-            //     PlayParticleAtPosition(agent.transform.position);
-            // }
+            if (usePoofParticlesOnElimination)
+            {
+                PlayParticleAtPosition(agent.transform.position);
+            }
         }
     }
 
+    public void PlayParticleAtPosition(Vector3 pos)
+    {
+        foreach (var item in poofParticlesList)
+        {
+            if (!item.activeInHierarchy)
+            {
+                item.transform.position = pos;
+                item.SetActive(true);
+                break;
+            }
+        }
+    }
 
     private void GetAllParameters()
     {
