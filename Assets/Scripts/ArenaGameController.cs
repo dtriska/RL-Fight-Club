@@ -14,15 +14,16 @@ public class AreaGameController : MonoBehaviour
 
     public SceneType CurrentSceneType = SceneType.Training;
 
-    [Header("HUMAN PLAYER")] public GameObject PlayerGameObject;
+    [Header("HUMAN PLAYER")]
+    public GameObject PlayerGameObject;
     public float EliminationHitBonus = 0.1f;
 
-    // Change this if you're increasing or decreasing the number of players
     private int m_NumberOfBluePlayersRemaining = 3;
     private int m_NumberOfRedPlayersRemaining = 3;
     private SimpleMultiAgentGroup m_Team0AgentGroup;
     private SimpleMultiAgentGroup m_Team1AgentGroup;
     public bool ShouldPlayEffects = true;
+
     [Serializable]
     public class PlayerInfo
     {
@@ -56,7 +57,6 @@ public class AreaGameController : MonoBehaviour
         m_Team0AgentGroup = new SimpleMultiAgentGroup();
         m_Team1AgentGroup = new SimpleMultiAgentGroup();
 
-        //INITIALIZE AGENTS
         foreach (var item in Team0Players)
         {
             item.Agent.Initialize();
@@ -82,8 +82,7 @@ public class AreaGameController : MonoBehaviour
     {
         if (!m_Initialized) return;
 
-        //RESET SCENE IF WE MaxEnvironmentSteps
-        m_ResetTimer += 1;
+        m_ResetTimer++;
         if (m_ResetTimer >= MaxEnvironmentSteps)
         {
             m_Team0AgentGroup.GroupEpisodeInterrupted();
@@ -94,7 +93,6 @@ public class AreaGameController : MonoBehaviour
 
     public void PlayerWasHit(ArenaAgent hit, ArenaAgent thrower)
     {
-        //SET AGENT/TEAM REWARDS HERE
         int hitTeamID = hit.teamID;
         int throwTeamID = thrower.teamID;
         var HitAgentGroup = hitTeamID == 1 ? m_Team1AgentGroup : m_Team0AgentGroup;
@@ -145,7 +143,7 @@ public class AreaGameController : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitAndResetScene()
+private IEnumerator WaitAndResetScene()
     {
         // Wait for the specified duration
         float delayBeforeReset = 3f;

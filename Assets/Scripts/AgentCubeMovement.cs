@@ -1,7 +1,6 @@
 //Standardized movement controller for the Agent Cube
 using Unity.MLAgents;
 using UnityEngine;
-using System.Collections;
 
 namespace MLAgents
 {
@@ -49,7 +48,6 @@ namespace MLAgents
         private float inputV;
         ArenaAgentInput m_Input;
 
-        private bool isAttacking = false;
         private ArenaAgent m_Agent;
         void Awake()
         {
@@ -78,23 +76,30 @@ namespace MLAgents
             rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(Mathf.DeltaAngle(smoothYawOld, m_SmoothYaw), transform.up));
         }
 
+        ////////////////////////
+        [Header("ATTACK COOLDOWNS")]
+        public float lightAttackCooldownDuration = 1.0f;
+        public float heavyAttackCooldownDuration = 2.0f;
+        public float blockCooldownDuration = 1.5f;
+
+        private float lightAttackCooldownTimer;
+        private float heavyAttackCooldownTimer;
+        private float blockCooldownTimer;
+
         void FixedUpdate()
         {
             dashCoolDownTimer += Time.fixedDeltaTime;
-
+            lightAttackCooldownTimer += Time.fixedDeltaTime;
+            heavyAttackCooldownTimer += Time.fixedDeltaTime;
+            blockCooldownTimer += Time.fixedDeltaTime;
 
             if (m_Agent)
             {
-                //this disables the heuristic input collection
                 m_Agent.disableInputCollectionInHeuristicCallback = allowHumanInputAndDisableAgentHeuristicInput;
             }
             if (!allowHumanInputAndDisableAgentHeuristicInput)
             {
                 return;
-            }
-
-            if (isAttacking) {
-                rb.velocity = Vector3.zero;
             }
 
             float rotate = 0;
@@ -104,32 +109,48 @@ namespace MLAgents
                 inputH = m_Input.moveInput.x;
                 inputV = m_Input.moveInput.y;
             }
-
-            if (!isAttacking) {
-                var movDir = transform.TransformDirection(new Vector3(inputH, 0, inputV));
-                RunOnGround(movDir);
-            }
-
+            var movDir = transform.TransformDirection(new Vector3(inputH, 0, inputV));
+            RunOnGround(movDir);
             Look(rotate);
 
             if (m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_dashPressed))
             {
                 Dash(rb.transform.TransformDirection(new Vector3(inputH, 0, inputV)));
             }
-
-            // Can only do one action at a time combined with a Dash
-            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput))
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput) && lightAttackCooldownTimer > lightAttackCooldownDuration)
             {
                 Attack("Light");
-
+                lightAttackCooldownTimer = 0;
             }
-            else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput))
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput) && heavyAttackCooldownTimer > heavyAttackCooldownDuration)
             {
                 Attack("Heavy");
+                heavyAttackCooldownTimer = 0;
             }
-            else if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed))
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed) && blockCooldownTimer > blockCooldownDuration)
             {
                 Attack("Block");
+                blockCooldownTimer = 0;
+            }
+        }
+
+        // Handles attack animations
+        public void Attack(string attack)
+        {
+            if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
+            {
+                if (attack == "Light")
+                {
+                    anim.SetTrigger("Light");
+                }
+                else if (attack == "Heavy")
+                {
+                    anim.SetTrigger("Heavy");
+                }
+                else if (attack == "Block")
+                {
+                    anim.SetTrigger("Block");
+                }
             }
         }
 
@@ -153,33 +174,9 @@ namespace MLAgents
             anim.SetFloat("Vertical", dir.y);
         }
 
-        public void Attack(string attack)
-        {
-            if (!IsAnimationPlaying("HeavyAttack") && !IsAnimationPlaying("LightAttack") && !IsAnimationPlaying("Block"))
-            {
-                isAttacking = true;
-                if (attack == "Light")
-                {
-                    anim.SetTrigger("Light");
-                }
-                else if (attack == "Heavy")
-                {
-                    anim.SetTrigger("Heavy");
-                }
-                else if (attack == "Block")
-                {
-                    anim.SetTrigger("Block");
-                }
-                StartCoroutine(ResetAttackState());
-            }
-        }
 
-        private IEnumerator ResetAttackState()
-        {
-            // Wait for the attack animation to finish
-            yield return new WaitForSeconds(anim.GetCurrentAnimatorStateInfo(0).length);
-            isAttacking = false;
-        }
+
+
 
         public bool IsAnimationPlaying(string animName)
         {
