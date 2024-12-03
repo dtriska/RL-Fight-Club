@@ -11222,8 +11222,8 @@ MonoBehaviour:
   - {fileID: 128752976}
   - {fileID: 1596887909}
   - {fileID: 1669032018}
-  HurtVoiceAudioClip: {fileID: 0}
-  CountdownClip: {fileID: 0}
+  HurtVoiceAudioClip: {fileID: 8300000, guid: 17a047fe9694cb34cb7eb65fca747f0e, type: 3}
+  CountdownClip: {fileID: 8300000, guid: cfd9989b6f452a54398742d679262290, type: 3}
   BlueTeamWonUI: {fileID: 1000318894}
   RedTeamWonUI: {fileID: 434228134}
   CountDownText: {fileID: 897498848}

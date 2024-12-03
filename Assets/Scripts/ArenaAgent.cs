@@ -45,6 +45,7 @@ public class ArenaAgent : Agent
     [Header("FIST")]
     public Collider attackCollider;
     public float m_knockback = 10f;
+    private AudioSource m_StunnedAudioSource;
 
     private bool m_IsDecisionStep;
     [HideInInspector]
@@ -56,7 +57,10 @@ public class ArenaAgent : Agent
 
     public override void Initialize()
     {
-
+        m_StunnedAudioSource = gameObject.AddComponent<AudioSource>();
+        m_StunnedAudioSource.spatialBlend = 1;
+        m_StunnedAudioSource.maxDistance = 250;
+        
         var bufferSensors = GetComponentsInChildren<BufferSensorComponent>();
         m_OtherAgentsBuffer = bufferSensors[0];
 
@@ -211,11 +215,22 @@ public class ArenaAgent : Agent
             }
         }
     }
-    public void EnableCollider() {
+
+    public void PlayHurtSound()
+    {
+        if (m_GameController.ShouldPlayEffects) {
+            m_StunnedAudioSource.pitch = Random.Range(0.3f, 0.8f);
+            m_StunnedAudioSource.PlayOneShot(m_GameController.HurtVoiceAudioClip, 1f);
+        }
+    }
+
+    public void EnableCollider()
+    {
         attackCollider.enabled = true;
     }
 
-    public void DisableCollider() {
+    public void DisableCollider()
+    {
         attackCollider.enabled = false;
     }
 

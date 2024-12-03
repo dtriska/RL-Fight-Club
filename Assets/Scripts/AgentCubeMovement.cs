@@ -82,15 +82,11 @@ namespace MLAgents
         public float heavyAttackCooldownDuration = 2.0f;
         public float blockCooldownDuration = 1.5f;
 
-        private float lightAttackCooldownTimer;
-        private float heavyAttackCooldownTimer;
         private float blockCooldownTimer;
 
         void FixedUpdate()
         {
             dashCoolDownTimer += Time.fixedDeltaTime;
-            lightAttackCooldownTimer += Time.fixedDeltaTime;
-            heavyAttackCooldownTimer += Time.fixedDeltaTime;
             blockCooldownTimer += Time.fixedDeltaTime;
 
             if (m_Agent)
@@ -117,20 +113,17 @@ namespace MLAgents
             {
                 Dash(rb.transform.TransformDirection(new Vector3(inputH, 0, inputV)));
             }
-            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput) && lightAttackCooldownTimer > lightAttackCooldownDuration)
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_LightAttackInput))
             {
                 Attack("Light");
-                lightAttackCooldownTimer = 0;
             }
-            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput) && heavyAttackCooldownTimer > heavyAttackCooldownDuration)
+            if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_HeavyAttackInput))
             {
                 Attack("Heavy");
-                heavyAttackCooldownTimer = 0;
             }
             if (m_Agent && m_Input.CheckIfInputSinceLastFrame(ref m_Input.m_blockPressed) && blockCooldownTimer > blockCooldownDuration)
             {
                 Attack("Block");
-                blockCooldownTimer = 0;
             }
         }
 

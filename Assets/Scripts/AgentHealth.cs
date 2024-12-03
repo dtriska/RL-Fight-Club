@@ -98,8 +98,9 @@ public class AgentHealth : MonoBehaviour
         dir.Normalize();
         rb.AddForce(dir * m_knockback, ForceMode.Impulse);
 
+        ArenaAgent thisAgent = GetComponentInParent<ArenaAgent>();
         // Notify the game controller that this agent was hit
-        m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), swordParentAgent);
+        m_GameController.PlayerWasHit(thisAgent, swordParentAgent);
 
         // Check if the attacker is performing a heavy or light attack and set damage accordingly
         float damage = DamagePerHit; // Default to light attack damage
@@ -122,6 +123,9 @@ public class AgentHealth : MonoBehaviour
         {
             Debug.LogWarning("ExplosionParticles is not assigned in the Inspector.");
         }
+        
+        thisAgent.PlayHurtSound();
+
         // Apply the calculated damage
         CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
         IsOnFinalHit = (CurrentPercentage - damage) <= 0;
@@ -160,7 +164,6 @@ public class AgentHealth : MonoBehaviour
     public void ResetHealth()
     {
         CurrentPercentage = 100;
-        rb.isKinematic = false;
         Dead = false;
         IsOnFinalHit = false;
     }

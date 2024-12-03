@@ -72,6 +72,7 @@ public class AreaGameController : MonoBehaviour
 
     void Initialize()
     {
+        m_audioSource = gameObject.AddComponent<AudioSource>();
         m_EnvParameters = Academy.Instance.EnvironmentParameters;
         m_Team0AgentGroup = new SimpleMultiAgentGroup();
         m_Team1AgentGroup = new SimpleMultiAgentGroup();
@@ -251,6 +252,27 @@ public class AreaGameController : MonoBehaviour
         ResetScene();
     }
 
+    IEnumerator GameCountdown()
+    {
+        Time.timeScale = 0;
+        if (ShouldPlayEffects)
+        {
+            m_audioSource.PlayOneShot(CountdownClip, .25f);
+        }
+
+        CountDownText.text = "3";
+        CountDownText.gameObject.SetActive(true);
+        yield return new WaitForSecondsRealtime(1);
+        CountDownText.text = "2";
+        yield return new WaitForSecondsRealtime(1);
+        CountDownText.text = "1";
+        yield return new WaitForSecondsRealtime(1);
+        CountDownText.text = "Go!";
+        yield return new WaitForSecondsRealtime(1);
+        Time.timeScale = 1;
+        CountDownText.gameObject.SetActive(false);
+    }
+
     private void GetAllParameters()
     {
         //Set time bonus to 1 for Elimination
@@ -261,10 +283,29 @@ public class AreaGameController : MonoBehaviour
 
     void ResetScene()
     {
-        StopAllCoroutines();
 
-        m_NumberOfBluePlayersRemaining = Team0Players.Count;
-        m_NumberOfRedPlayersRemaining = Team1Players.Count;
+        StopAllCoroutines();
+        
+        if (ShouldPlayEffects)
+        {
+            if (BlueTeamWonUI)
+            {
+                BlueTeamWonUI.SetActive(false);
+            }
+            if (RedTeamWonUI)
+            {
+                RedTeamWonUI.SetActive(false);
+            }
+
+            if (CurrentSceneType == SceneType.Game)
+            {
+                StartCoroutine(GameCountdown());
+            }
+        }
+        
+        m_GameEnded = false;
+        m_NumberOfBluePlayersRemaining = 3;
+        m_NumberOfRedPlayersRemaining = 3;
         m_ResetTimer = 0;
 
         GetAllParameters();
