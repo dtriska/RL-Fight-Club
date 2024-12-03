@@ -79,6 +79,7 @@ public class ArenaAgent : Agent
     {
         transform.position = m_StartingPos;
         AgentRb.constraints = RigidbodyConstraints.FreezeRotation;
+        input.DisableInput = false;
 
         transform.rotation = Quaternion.Euler(new Vector3(0f, Random.Range(0, 360)));
         AgentHealth.ResetHealth();
@@ -161,6 +162,12 @@ public class ArenaAgent : Agent
 
     public void MoveAgent(ActionBuffers actionBuffers)
     {
+        if (AgentHealth.Dead)
+        {
+            input.DisableInput = true;
+            return;
+        }
+
         var continuousActions = actionBuffers.ContinuousActions;
         var discreteActions = actionBuffers.DiscreteActions;
 
@@ -212,7 +219,7 @@ public class ArenaAgent : Agent
     // HUMAN INPUT
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        if (disableInputCollectionInHeuristicCallback)
+        if (disableInputCollectionInHeuristicCallback || AgentHealth.Dead)
         {
             return;
         }

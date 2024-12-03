@@ -171,7 +171,7 @@ namespace MLAgents
             float adjustedSpeed = Mathf.Clamp(agentRunSpeed - vel, 0, agentTerminalVel);
             rb.AddForce(dir * adjustedSpeed, runningForceMode);
             anim.SetFloat("Horizontal", dir.x);
-            anim.SetFloat("Vertical", dir.y);
+            anim.SetFloat("Vertical", dir.z);
         }
 
 
