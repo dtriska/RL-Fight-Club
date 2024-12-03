@@ -42,7 +42,8 @@ public class ArenaAgent : Agent
     private float m_LocationNormalizationFactor = 80.0f; // About the size of a reasonable stage
     public BufferSensorComponent m_OtherAgentsBuffer;
 
-    [Header("SWORD")]
+    [Header("FIST")]
+    public Collider attackCollider;
     public float m_knockback = 10f;
 
     private bool m_IsDecisionStep;
@@ -209,6 +210,13 @@ public class ArenaAgent : Agent
                 m_CubeMovement.Dash(moveDir);
             }
         }
+    }
+    public void EnableCollider() {
+        attackCollider.enabled = true;
+    }
+
+    public void DisableCollider() {
+        attackCollider.enabled = false;
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
