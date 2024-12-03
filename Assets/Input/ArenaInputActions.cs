@@ -152,7 +152,7 @@ public partial class @ArenaInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""fbe696ec-e68f-4194-b7b5-138de0bd97da"",
-                    ""path"": ""<Keyboard>/j"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -163,7 +163,7 @@ public partial class @ArenaInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""646be1cc-0324-4ea2-a260-1e9451be6251"",
-                    ""path"": ""<Keyboard>/i"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -185,7 +185,7 @@ public partial class @ArenaInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7f3da160-09d5-4037-862e-a75fe3b4ea76"",
-                    ""path"": ""<Keyboard>/k"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -196,7 +196,7 @@ public partial class @ArenaInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f16d5efe-b9aa-4994-80f6-ac8a663e7eff"",
-                    ""path"": ""<Keyboard>/l"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

@@ -88,14 +88,12 @@ public class ArenaAgent : Agent
         AgentRb.angularDrag = 1;
     }
 
-    private int m_AgentStepCount; //current agent step
     void FixedUpdate()
     {
         m_DashCoolDownReady = m_CubeMovement.dashCoolDownTimer > m_CubeMovement.dashCoolDownDuration;
         if (StepCount % 5 == 0)
         {
             m_IsDecisionStep = true;
-            m_AgentStepCount++;
         }
     }
 

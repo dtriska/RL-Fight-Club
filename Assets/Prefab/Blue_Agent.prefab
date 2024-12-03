@@ -1247,7 +1247,7 @@ Transform:
   m_GameObject: {fileID: 2104135432046278125}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0.001}
+  m_LocalPosition: {x: 0, y: 1, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2693,7 +2693,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -9171,6 +9171,7 @@ GameObject:
   - component: {fileID: 3028796594837535026}
   - component: {fileID: 7523919560186242601}
   - component: {fileID: 1617338172063200810}
+  - component: {fileID: 6105261207130253840}
   m_Layer: 0
   m_Name: Blue_Agent
   m_TagString: blueAgent
@@ -9356,7 +9357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ee5d3b6a8181c42a26f917bd9ccf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisableInput: 1
+  DisableInput: 0
   moveInput: {x: 0, y: 0}
   m_LightAttackInput: 0
   m_HeavyAttackInput: 0
@@ -9389,6 +9390,9 @@ MonoBehaviour:
   MouseSmoothTime: 0.01
   agentFallingSpeed: 80
   anim: {fileID: 0}
+  lightAttackCooldownDuration: 1
+  heavyAttackCooldownDuration: 2
+  blockCooldownDuration: 1.5
 --- !u!114 &1617338172063200810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9402,18 +9406,70 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_knockback: 10
+  m_Capsule: {fileID: 6064334429375221617}
   IsOnFinalHit: 0
   m_GameController: {fileID: 0}
   CurrentPercentage: 100
   UISlider: {fileID: 0}
-  damageColor: {r: 0.9811321, g: 0.39337844, b: 0.39337844, a: 0}
-  startingColor: {r: 0.0627451, g: 0.5372549, b: 0.8862745, a: 0}
   damageFlashDuration: 0.02
-  CubeBody: {fileID: 8913621319921198317}
-  ExplosionParticles: {fileID: 5382765808696998951}
+  ExplosionParticles: {fileID: 3649596878680558321}
   Dead: 0
   DamagePerHit: 15
   DamagePerHitHEAVY: 40
+  impulseSource: {fileID: 6105261207130253840}
+--- !u!114 &6105261207130253840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8913621319921198317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 2
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.2
+    m_ImpulseType: 3
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 11400000, guid: c3ebc4a9c3e204c45bae464009315eec, type: 2}
+    m_AmplitudeGain: 2
+    m_FrequencyGain: 2
+    m_RepeatMode: 0
+    m_Randomize: 0
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.1
+      m_DecayTime: 0.1
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 200
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 200
+    m_PropagationSpeed: 300
+  m_DefaultVelocity: {x: 0, y: -1, z: 0}
 --- !u!1 &9112160036787115506
 GameObject:
   m_ObjectHideFlags: 0

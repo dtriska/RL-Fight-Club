@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Unity.MLAgents;
 using UnityEngine;
 using TMPro;
-using UnityEngine.InputSystem;
 
 public class AreaGameController : MonoBehaviour
 {
@@ -56,10 +55,6 @@ public class AreaGameController : MonoBehaviour
     [Header("UI Audio")]
     public AudioClip HurtVoiceAudioClip;
     public AudioClip CountdownClip;
-    public AudioClip WinSoundFX1;
-    public AudioClip WinSoundFX2;
-    public AudioClip LoseSoundFX1;
-    public AudioClip LoseSoundFX2;
     private AudioSource m_audioSource;
 
     [Header("UI")]
@@ -137,19 +132,20 @@ public class AreaGameController : MonoBehaviour
         var ThrowAgentGroup = hitTeamID == 1 ? m_Team0AgentGroup : m_Team1AgentGroup;
         float hitBonus = EliminationHitBonus;
 
-        if (hit.AgentHealth.IsOnFinalHit) //FINAL HIT
+        if (hit.AgentHealth.IsOnFinalHit) // FINAL HIT
         {
             m_NumberOfBluePlayersRemaining -= hitTeamID == 0 ? 1 : 0;
             m_NumberOfRedPlayersRemaining -= hitTeamID == 1 ? 1 : 0;
-            print("Blue Remaining: " + m_NumberOfBluePlayersRemaining + " Red Remaining: " + m_NumberOfRedPlayersRemaining);
+            Debug.Log("Blue Remaining: " + m_NumberOfBluePlayersRemaining + " Red Remaining: " + m_NumberOfRedPlayersRemaining);
+
             // The current agent was just killed and is the final agent
-            if (m_NumberOfBluePlayersRemaining == 0 || m_NumberOfRedPlayersRemaining == 0 || hit.gameObject == PlayerGameObject)
+            if (m_NumberOfBluePlayersRemaining <= 0 || m_NumberOfRedPlayersRemaining <= 0 || hit.gameObject == PlayerGameObject)
             {
                 ThrowAgentGroup.AddGroupReward(2.0f - m_TimeBonus * (m_ResetTimer / MaxEnvironmentSteps));
                 HitAgentGroup.AddGroupReward(-1.0f);
                 ThrowAgentGroup.EndGroupEpisode();
                 HitAgentGroup.EndGroupEpisode();
-                print($"Team {throwTeamID} Won");
+                Debug.Log($"Team {throwTeamID} Won");
 
                 if (ShouldPlayEffects)
                 {
@@ -189,6 +185,8 @@ public class AreaGameController : MonoBehaviour
 
     public IEnumerator TumbleThenPoof(ArenaAgent agent, bool shouldPoof = true)
     {
+        // Disable the agent's collider in Agent Health
+
         // Add force to make the agent tumble
         agent.AgentRb.AddForce(Vector3.right * 2f, ForceMode.Impulse);
         agent.AgentRb.constraints = RigidbodyConstraints.None;
@@ -245,16 +243,10 @@ public class AreaGameController : MonoBehaviour
     public IEnumerator ShowWinScreenThenReset(int winningTeam, float delaySeconds)
     {
         GameObject winTextGO = winningTeam == 0 ? BlueTeamWonUI : RedTeamWonUI;
-        AudioClip clipToUse1 = winningTeam == 0 ? WinSoundFX1 : LoseSoundFX1;
-        AudioClip clipToUse2 = winningTeam == 0 ? WinSoundFX2 : LoseSoundFX2;
+
         yield return new WaitForSeconds(delaySeconds);
         winTextGO.SetActive(true);
-        if (ShouldPlayEffects)
-        {
-            m_audioSource.PlayOneShot(clipToUse1, .05f);
-            m_audioSource.PlayOneShot(clipToUse2, .05f);
-        }
-
+        yield return new WaitForSeconds(3.0f);
         winTextGO.SetActive(false);
         ResetScene();
     }
@@ -297,6 +289,11 @@ public class AreaGameController : MonoBehaviour
         if (!m_Initialized)
         {
             Initialize();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetScene();
         }
     }
 }

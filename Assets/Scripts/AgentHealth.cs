@@ -5,20 +5,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using MLAgents;
+using Cinemachine;
 
 public class AgentHealth : MonoBehaviour
 {
     private int teamID;
     public float m_knockback = 10f;
+    public CapsuleCollider m_Capsule;
     public bool IsOnFinalHit = false;
     public AreaGameController m_GameController;
     public float CurrentPercentage = 100;
     public Slider UISlider;
 
     public float damageFlashDuration = .02f;
-
-    public GameObject CubeBody;
-    public GameObject ExplosionParticles;
+    public ParticleSystem ExplosionParticles;
     public bool Dead;
     public float DamagePerHit = 15f;
 
@@ -26,6 +26,8 @@ public class AgentHealth : MonoBehaviour
 
     private Rigidbody rb;
     private static Dictionary<Collider, ArenaAgent> swordParentTeamIDCache = new Dictionary<Collider, ArenaAgent>();
+    [SerializeField]
+    private CinemachineImpulseSource impulseSource;
 
     void OnEnable()
     {
@@ -88,6 +90,7 @@ public class AgentHealth : MonoBehaviour
             return;
         }
 
+        Debug.Log("Player: " + teamID + " was hit by Player: " + swordParentAgent.teamID);
 
         // Apply knockback force
         var dir = transform.position - other.transform.position;
@@ -96,7 +99,7 @@ public class AgentHealth : MonoBehaviour
         rb.AddForce(dir * m_knockback, ForceMode.Impulse);
 
         // Notify the game controller that this agent was hit
-        m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), swordParentAgent.GetComponent<ArenaAgent>());
+        m_GameController.PlayerWasHit(this.GetComponentInParent<ArenaAgent>(), swordParentAgent);
 
         // Check if the attacker is performing a heavy or light attack and set damage accordingly
         float damage = DamagePerHit; // Default to light attack damage
@@ -111,11 +114,30 @@ public class AgentHealth : MonoBehaviour
             damage = DamagePerHit;
         }
 
+        if (ExplosionParticles != null)
+        {
+            ExplosionParticles.Play();
+        }
+        else
+        {
+            Debug.LogWarning("ExplosionParticles is not assigned in the Inspector.");
+        }
         // Apply the calculated damage
         CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
         IsOnFinalHit = (CurrentPercentage - damage) <= 0;
 
+        Debug.Log("Player: " + teamID + " Name: " + this.gameObject.name + " health: " + CurrentPercentage + " IsOnFinalHit: " + IsOnFinalHit);
 
+        if (CurrentPercentage <= 0)
+        {
+            m_Capsule.enabled = false; // Remove agent's collider to prevent further collisions
+            Dead = true;
+
+            if (impulseSource)
+            {
+                impulseSource.GenerateImpulse();
+            }
+        }
     }
 
     public static Transform GetAncestorAtLevel(Transform child, int level)
@@ -141,8 +163,6 @@ public class AgentHealth : MonoBehaviour
         rb.isKinematic = false;
         Dead = false;
         IsOnFinalHit = false;
-        CubeBody.SetActive(true);
-        ExplosionParticles.SetActive(false);
     }
 
 
