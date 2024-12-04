@@ -11,7 +11,6 @@ public class AgentHealth : MonoBehaviour
 {
     private int teamID;
     public float m_knockback = 10f;
-    public CapsuleCollider m_Capsule;
     public bool IsOnFinalHit = false;
     public AreaGameController m_GameController;
     public float CurrentPercentage = 100;
@@ -127,16 +126,13 @@ public class AgentHealth : MonoBehaviour
         thisAgent.PlayHurtSound();
 
         // Apply the calculated damage
-        CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
         IsOnFinalHit = (CurrentPercentage - damage) <= 0;
+        CurrentPercentage = Mathf.Clamp(CurrentPercentage - damage, 0, 100);
 
         Debug.Log("Player: " + teamID + " Name: " + this.gameObject.name + " health: " + CurrentPercentage + " IsOnFinalHit: " + IsOnFinalHit);
 
-        if (CurrentPercentage <= 0)
+        if (CurrentPercentage == 0)
         {
-            m_Capsule.enabled = false; // Remove agent's collider to prevent further collisions
-            Dead = true;
-
             if (impulseSource)
             {
                 impulseSource.GenerateImpulse();

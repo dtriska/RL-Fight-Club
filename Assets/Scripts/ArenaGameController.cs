@@ -153,6 +153,7 @@ public class AreaGameController : MonoBehaviour
                     // Don't poof the last agent
                     StartCoroutine(TumbleThenPoof(hit, false));
                 }
+                hit.AgentHealth.Dead = true;
                 EndGame(throwTeamID);
             }
             else
@@ -166,22 +167,13 @@ public class AreaGameController : MonoBehaviour
                 {
                     hit.gameObject.SetActive(false);
                 }
+                hit.AgentHealth.Dead = true;
             }
         }
         else
         {
             thrower.AddReward(hitBonus);
         }
-    }
-
-    private IEnumerator WaitAndResetScene()
-    {
-        // Wait for the specified duration
-        float delayBeforeReset = 3f;
-        yield return new WaitForSeconds(delayBeforeReset);
-
-        // Reset the scene
-        ResetScene();
     }
 
     public IEnumerator TumbleThenPoof(ArenaAgent agent, bool shouldPoof = true)

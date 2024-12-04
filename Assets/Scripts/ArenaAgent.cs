@@ -53,14 +53,16 @@ public class ArenaAgent : Agent
     //set this to true on an agent that you want to be human playable and it will collect input every
     //FixedUpdate tick instead of ever decision step
     public bool disableInputCollectionInHeuristicCallback;
-
-
-    public override void Initialize()
+    public void Start()
     {
+        // Only add this once
         m_StunnedAudioSource = gameObject.AddComponent<AudioSource>();
         m_StunnedAudioSource.spatialBlend = 1;
         m_StunnedAudioSource.maxDistance = 250;
-        
+    }
+
+    public override void Initialize()
+    {
         var bufferSensors = GetComponentsInChildren<BufferSensorComponent>();
         m_OtherAgentsBuffer = bufferSensors[0];
 
@@ -218,7 +220,8 @@ public class ArenaAgent : Agent
 
     public void PlayHurtSound()
     {
-        if (m_GameController.ShouldPlayEffects) {
+        if (m_GameController.ShouldPlayEffects)
+        {
             m_StunnedAudioSource.pitch = Random.Range(0.3f, 0.8f);
             m_StunnedAudioSource.PlayOneShot(m_GameController.HurtVoiceAudioClip, 1f);
         }

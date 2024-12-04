@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ML Agents Arena.unity
     guid: 4cfb7bc7afc327a468bd830609ae8f94
+  - enabled: 1
+    path: Assets/Scenes/ML Agents Spectate.unity
+    guid: 8774d71189f461241ae01a2a3625005d
   m_configObjects:
     com.unity.ml-agents.settings: {fileID: 11400000, guid: b117aee60dc65eb489b8955a1044a66b, type: 2}
   m_UseUCBPForAssetBundles: 0

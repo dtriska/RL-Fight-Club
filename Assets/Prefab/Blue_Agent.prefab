@@ -9359,18 +9359,16 @@ MonoBehaviour:
   maxAngularVel: 50
   runningForceMode: 2
   agentRunSpeed: 10
-  agentTerminalVel: 20
-  dashBoostForce: 30
+  agentTerminalVel: 10
+  dashBoostForce: 20
   dashForceMode: 2
-  dashCoolDownDuration: 1
+  dashCoolDownDuration: 3
   dashCoolDownTimer: 0
   agentIdleDragVelCoeff: 1
   MouseSensitivity: 10
   MouseSmoothTime: 0.01
   agentFallingSpeed: 80
   anim: {fileID: 0}
-  lightAttackCooldownDuration: 1
-  heavyAttackCooldownDuration: 2
   blockCooldownDuration: 1.5
 --- !u!114 &1617338172063200810
 MonoBehaviour:

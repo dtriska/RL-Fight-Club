@@ -78,8 +78,6 @@ namespace MLAgents
 
         ////////////////////////
         [Header("ATTACK COOLDOWNS")]
-        public float lightAttackCooldownDuration = 1.0f;
-        public float heavyAttackCooldownDuration = 2.0f;
         public float blockCooldownDuration = 1.5f;
 
         private float blockCooldownTimer;
